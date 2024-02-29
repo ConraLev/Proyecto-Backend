@@ -1,0 +1,92 @@
+[
+	{
+		"id": 1,
+		"title": "Casco de moto",
+		"description": "Casco de seguridad para motociclistas",
+		"price": 45000,
+		"thumbnail": "Sin imagen",
+		"code": "583921",
+		"stock": 25
+	},
+	{
+		"id": 2,
+		"title": "Chaqueta de cuero",
+		"description": "Chaqueta de cuero para motociclistas",
+		"price": 72000,
+		"thumbnail": "Sin imagen",
+		"code": "740856",
+		"stock": 12
+	},
+	{
+		"id": 3,
+		"title": "Guantes para moto",
+		"description": "Guantes de protección para motociclistas",
+		"price": 15000,
+		"thumbnail": "Sin imagen",
+		"code": "209743",
+		"stock": 30
+	},
+	{
+		"id": 4,
+		"title": "Botas para moto",
+		"description": "Botas de cuero para motociclistas",
+		"price": 30000,
+		"thumbnail": "Sin imagen",
+		"code": "365812",
+		"stock": 14
+	},
+	{
+		"id": 5,
+		"title": "Pantalones de moto",
+		"description": "Pantalones de protección para motociclistas",
+		"price": 25000,
+		"thumbnail": "Sin imagen",
+		"code": "918274",
+		"stock": 17
+	},
+	{
+		"id": 6,
+		"title": "Kit de limpieza para moto",
+		"description": "Kit completo para mantener tu moto limpia",
+		"price": 4500,
+		"thumbnail": "Sin imagen",
+		"code": "472630",
+		"stock": 50
+	},
+	{
+		"id": 7,
+		"title": "Aceite para moto",
+		"description": "Aceite de motor de alta calidad para motocicletas",
+		"price": 9000,
+		"thumbnail": "Sin imagen",
+		"code": "185943",
+		"stock": 42
+	},
+	{
+		"id": 8,
+		"title": "Candado para moto",
+		"description": "Candado de seguridad para motocicletas",
+		"price": 5000,
+		"thumbnail": "Sin imagen",
+		"code": "694127",
+		"stock": 15
+	},
+	{
+		"id": 9,
+		"title": "Cubremanos para moto",
+		"description": "Accesorio para proteger las manos del frío y el viento",
+		"price": 3000,
+		"thumbnail": "Sin imagen",
+		"code": "530871",
+		"stock": 20
+	},
+	{
+		"id": 10,
+		"title": "Protector de tanque",
+		"description": "Protector adhesivo para evitar rayones en el tanque de la moto",
+		"price": 5000,
+		"thumbnail": "Sin imagen",
+		"code": "817436",
+		"stock": 40
+	}
+]
