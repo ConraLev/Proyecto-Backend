@@ -34,17 +34,20 @@ class ProductManager {
             }
         }
 
-             
-        newId(){
-            const id = this.contadorId;
-            this.contadorId++;
-            return id;
+        //Creacion de ID para productos     
+        newId() {
+            const maxId = this.products.reduce((max, product) => {
+                return product.id > max ? product.id : max;
+            }, 0);
+        
+            return maxId + 1;
         }
+        
 
 
         // Agregar producto
-        async addProduct(title, description, price, thumbnail, code, stock) {
-            if (!title || !description || !price || !thumbnail || !code || !stock) {
+        async addProduct(title, description, price, thumbnail, code, stock,category) {
+            if (!title || !description || !price || !thumbnail || !code || !stock || !category ) {
                 console.log("Error: Debe completar todos los campos")
                 
             }
@@ -64,7 +67,8 @@ class ProductManager {
                 price,
                 thumbnail,
                 code,
-                stock
+                stock,
+                category
             }
 
             // Agregar el nuevo producto al arreglo
@@ -132,14 +136,12 @@ class ProductManager {
             }
         }
 }
-
+/*
  // Proceso de Testing
 
-// Creación de la instancia de ProductManager
+ // Creación de la instancia de ProductManager
 const productManager = new ProductManager();
 
-/* // Obtener todos los productos 
-console.log("Todos los productos:", productManager.getProducts());
 
 // Agregar productos
 productManager.addProduct("Casco de moto", "Casco de seguridad para motociclistas", 45000, "Sin imagen", "583921", 25),
@@ -152,22 +154,7 @@ productManager.addProduct("Aceite para moto", "Aceite de motor de alta calidad p
 productManager.addProduct("Candado para moto", "Candado de seguridad para motocicletas", 5000, "Sin imagen", "694127", 15);
 productManager.addProduct("Cubremanos para moto", "Accesorio para proteger las manos del frío y el viento", 3000, "Sin imagen", "530871", 20);
 productManager.addProduct("Protector de tanque", "Protector adhesivo para evitar rayones en el tanque de la moto", 5000, "Sin imagen", "817436", 40);
-
-
-// Mostrar todos los productos 
-console.log("Todos los productos:", productManager.getProducts());
-
-// Obtener un producto por ID 
-console.log("Producto con ID 1:", productManager.getProductById(1));
-console.log("Producto con ID 3:", productManager.getProductById(3)); // Error
-
-//Se realiza el Update de un producto
-productManager.updateProduct(2, {  price: 72000, stock: 12})
-
-//Eliminacion de productos
-productManager.deleteProduct(12) */
-//productManager.deleteProduct(3)  //- Al intentar borrar el segundo producto, el archivo JSON falla
-
+ */
 
 
 module.exports = ProductManager; 
