@@ -54,11 +54,10 @@ router.get('/:id', (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const { title, description, price, thumbnail, code, stock, category } = req.body; // Agrega category aquí
+        const { title, description, price, thumbnail, code, stock, category } = req.body; 
 
         const newProductId = productManager.newId();
-        await productManager.addProduct(title, description, price, thumbnail, code, stock, category); // Pasa category como argumento
-
+        await productManager.addProduct(title, description, price, thumbnail, code, stock, category);
         const newProduct = productManager.getProductById(newProductId);
 
         res.status(201).json(newProduct);
