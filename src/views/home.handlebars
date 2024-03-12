@@ -1,0 +1,24 @@
+<div id="prodMasChat" class="prodMasChat">
+    <div class="listaProd" id="productos">
+    {{#each products}}
+        <div class="listaProductos">
+            <h4>ID PRODUCTO: {{id}}</h4>
+            <h4>NOMBRE: {{title}}</h4>
+            <h4>DESCRIPCION: {{description}}</h4>
+            <h4>PRECIO: {{price}}</h4>
+            <h4>IMAGENES: {{thumbnails}}</h4>
+            <h4>CODIGO: {{code}}</h4>
+            <h4>STOCK: {{stock}}</h4>
+            <h4>CATEGORIA: {{category}}</h4>
+        </div>
+    {{/each}}
+    </div>
+
+    <div id="chat" class="chat">
+            <h2>Chat</h2>
+            <input type="text" id="envMensaje" placeholder="Ingrese Mensaje"> 
+            <button id="btnEnviar">Enviar</button>
+            <div id="chatBox"></div>
+    </div>
+
+</div>

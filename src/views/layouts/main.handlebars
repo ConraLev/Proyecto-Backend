@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{#each styles}}
+        <link rel="stylesheet" href="/css/{{this}}.css">
+    {{/each}}
+    <title>{{title}}</title>
+</head>
+<body>
+
+    <h1>Productos</h1>
+
+    {{{body}}}
+
+    {{#if useWS }}
+    <script src="/socket.io/socket.io.js"></script>
+    {{/if}}
+
+
+
+    {{#each scripts}}
+    <script src="/js/{{this}}.js"></script>
+    {{/each}}
+
+</body>
+</html>

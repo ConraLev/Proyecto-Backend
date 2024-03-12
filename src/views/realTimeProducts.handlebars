@@ -1,0 +1,44 @@
+<div id="prodMasChat" class="prodMasChat">
+    <div class="listaProd" id="productos">
+    {{#each products}}
+        <div class="listaProductos">
+            <h4>ID PRODUCTO: {{id}}</h4>
+            <h4>NOMBRE: {{title}}</h4>
+            <h4>DESCRIPCION: {{description}}</h4>
+            <h4>PRECIO: {{price}}</h4>
+            <h4>IMAGENES: {{thumbnails}}</h4>
+            <h4>CODIGO: {{code}}</h4>
+            <h4>STOCK: {{stock}}</h4>
+            <h4>CATEGORIA: {{category}}</h4>
+        </div>
+    {{/each}}
+    </div>
+
+    <div class="formProduct" id="formProduct">
+        <form method="post" action="/addProduct">
+            <h2>Carga de Productos</h2>
+            <label for="title">Nombre</label>
+            <input id="title" type="text" name="title"> <br>
+            <label for="description">Descripcion</label>
+            <input id="description" type="text" name="description">  <br>
+            <label for="price">Precio</label>
+            <input id="price" type="number" name="price"> <br>
+            <label for="thumbnail">Imagen</label>
+            <input id="thumbnail" type="file" name="thumbnail"> <br>
+            <label for="code">Codigo</label>
+            <input id="code" type="number" name="code"> <br>
+            <label for="stock">Stock</label>
+            <input id="stock" type="number" name="stock"> <br>
+            <label for="category">Categoria</label>
+            <input id="category" type="text" name="category"> <br>
+            <button type="submit">Cargar Producto</button>
+        </form>
+        <div class="delProduct"> 
+            <h2>Ingrese producto a borrar</h2>
+            <input type="number" id="DelProductId">
+            <button>Borrar Producto</button>
+        </div>
+           
+    </div>
+
+</div>

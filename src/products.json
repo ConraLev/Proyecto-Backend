@@ -108,5 +108,35 @@
 		"code": "185543",
 		"stock": 100,
 		"category": "Lubricantes"
+	},
+	{
+		"id": 12,
+		"title": "Prueba ",
+		"description": "Prueba 1",
+		"price": "10000",
+		"thumbnail": "",
+		"code": "10000",
+		"stock": "110",
+		"category": "Varios"
+	},
+	{
+		"id": 13,
+		"title": "asdsad",
+		"description": "asdsa",
+		"price": "111",
+		"thumbnail": "",
+		"code": "1111",
+		"stock": "11",
+		"category": "111"
+	},
+	{
+		"id": 14,
+		"title": "asdas",
+		"description": "saads",
+		"price": "111",
+		"thumbnail": "",
+		"code": "111",
+		"stock": "11",
+		"category": "1"
 	}
 ]

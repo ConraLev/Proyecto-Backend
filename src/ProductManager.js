@@ -139,6 +139,7 @@ class ProductManager {
 
 
 
+module.exports = ProductManager; 
 
 
 
@@ -164,8 +165,6 @@ productManager.addProduct("Cubremanos para moto", "Accesorio para proteger las m
 productManager.addProduct("Protector de tanque", "Protector adhesivo para evitar rayones en el tanque de la moto", 5000, "Sin imagen", "817436", 40);
  */
 
-
-module.exports = ProductManager; 
 
 
 

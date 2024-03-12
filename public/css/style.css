@@ -1,0 +1,36 @@
+.prodMasChat{
+    background-color: aqua;
+    display: flex;
+    gap: 5vh;
+}
+
+.listaProductos{
+    background-color: rgb(245, 35, 35);
+    margin: 20px;
+    padding: 10px;
+    color: white;
+    text-shadow: 3px 3px 5px black;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: 8px 8px 10px black;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5vh;
+    
+}
+
+.chat{
+    justify-content: center;
+    text-align: center;
+    background-color: blue;
+
+}
+
+
+.formProduct{
+    background-color: green;
+}
+
+.delProduct{
+    background-color: red;
+}

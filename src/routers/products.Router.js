@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-const ProductManager = require('./../ProductManager');
+const ProductManager = require('../ProductManager');
 const productManager = new ProductManager();
+
 
 //Obtener listado de todos los productos o limitarlo por cantidad
 
@@ -55,7 +56,7 @@ router.get('/:id', (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { title, description, price, thumbnail, code, stock, category } = req.body; 
-
+        
         const newProductId = productManager.newId();
         await productManager.addProduct(title, description, price, thumbnail, code, stock, category);
         const newProduct = productManager.getProductById(newProductId);
@@ -66,6 +67,7 @@ router.post('/', async (req, res) => {
         res.status(500).json({ error: 'Error al crear un nuevo producto' });
     }
 });
+
 
 
 //Actualizar producto por ID
