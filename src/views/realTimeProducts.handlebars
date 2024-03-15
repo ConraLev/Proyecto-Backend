@@ -15,7 +15,7 @@
     </div>
 
     <div class="formProduct" id="formProduct">
-        <form method="post" action="/addProduct">
+    <form id="productForm" method="post" action="/addProduct">
             <h2>Carga de Productos</h2>
             <label for="title">Nombre</label>
             <input id="title" type="text" name="title"> <br>
@@ -24,7 +24,7 @@
             <label for="price">Precio</label>
             <input id="price" type="number" name="price"> <br>
             <label for="thumbnail">Imagen</label>
-            <input id="thumbnail" type="file" name="thumbnail"> <br>
+            <input id="thumbnail" type="file" name="thumbnail" default="Sin Imagen"> <br>
             <label for="code">Codigo</label>
             <input id="code" type="number" name="code"> <br>
             <label for="stock">Stock</label>
@@ -36,9 +36,10 @@
         <div class="delProduct"> 
             <h2>Ingrese producto a borrar</h2>
             <input type="number" id="DelProductId">
-            <button>Borrar Producto</button>
+            <button type="submit">Borrar Producto</button>
         </div>
            
     </div>
 
 </div>
+

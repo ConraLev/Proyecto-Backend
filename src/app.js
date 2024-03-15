@@ -7,6 +7,9 @@ const handlebars = require('express-handlebars');
 const { Server } = require('socket.io');
 const app = express();
 const port = 8080;
+const products = [];
+const fs = require('fs');
+
 
 app.use(express.static(`${__dirname}/../public`));
 
@@ -27,16 +30,38 @@ const httpServer = app.listen(port, () => {
 });
 
 const wsServer = new Server(httpServer)
+app.set('ws', wsServer);
 
-wsServer.on('connection', (clientSocket) =>{
-    console.log(`Cliente conectado ID: ${clientSocket.id}`)
-    clientSocket.emit('saludo', `Bienvenido ID: ${clientSocket.id}`)
 
-    clientSocket.on('new-messege', (messege) =>{
-        wsServer.emit('messege', { id: clientSocket.id, text: messege})
-    })
+wsServer.on('connection', (clientSocket) => {
+    console.log(`Cliente conectado ID: ${clientSocket.id}`);
+    clientSocket.emit('saludo', `Bienvenido ID: ${clientSocket.id}`);
 
-    /* clientSocket.on('addProduct') */
+    fs.readFile('./products.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Error al leer los productos' });
+        }
+    });
 
-})
+    clientSocket.on('addProduct', (newProduct) => {
+        fs.readFile('./products.json', 'utf8', (err, data) => {
+            if (err) {
+                console.error(err);
+            }
+            const products = JSON.parse(data);
+            products.push(newProduct);
 
+            fs.writeFile('./products.json', JSON.stringify(products), (err) => {
+                if (err) {
+                    console.error(err);
+                }
+                wsServer.emit('updateProducts', products);
+            });
+        });
+    });
+
+    clientSocket.on('new-message', (message) => {
+        wsServer.emit('message', { id: clientSocket.id, text: message });
+    });
+});
