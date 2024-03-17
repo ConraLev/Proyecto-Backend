@@ -1,1 +1,9 @@
-[{"id":1,"title":"Casco de moto","description":"Casco de seguridad para motociclistas","price":45000,"thumbnail":"Sin imagen","code":"583921","stock":25,"category":"Indumentaria"},{"title":"MANTECA","description":"111","price":"111","thumbnail":{"type":"Buffer","data":[]},"code":"111","stock":"11","category":"1"}]
+[
+    {"title":"MANTECA",
+    "description":"100",
+    "price":"100",
+    "thumbnail": "Sin imagen",
+    "code":"10",
+    "stock":"10",
+    "category":"0"}
+]

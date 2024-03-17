@@ -1,4 +1,3 @@
-
 const express = require('express');
 const productsRouter = require('./routers/products.Router');
 const cartsRouter = require('./routers/carts.Router');
@@ -9,6 +8,7 @@ const app = express();
 const port = 8080;
 const products = [];
 const fs = require('fs');
+const { Console } = require('console');
 
 
 app.use(express.static(`${__dirname}/../public`));
@@ -44,8 +44,15 @@ wsServer.on('connection', (clientSocket) => {
         }
     });
 
-    clientSocket.on('addProduct', (newProduct) => {
-        fs.readFile('./products.json', 'utf8', (err, data) => {
+  /*   clientSocket.on('addProduct', (newProduct) =>{
+        console.log('ACA' + newProduct)
+        productManager.addProduct(newProduct);
+        console.log("ACA 2" + newProduct)
+
+    }) */
+
+    /* clientSocket.on('addProduct', (newProduct) => {
+         fs.readFile('./products.json', 'utf8', (err, data) => {
             if (err) {
                 console.error(err);
             }
@@ -58,8 +65,34 @@ wsServer.on('connection', (clientSocket) => {
                 }
                 wsServer.emit('updateProducts', products);
             });
-        });
-    });
+        }); 
+        console.log(newProduct)
+    }); */
+
+
+    /* router.post('/addProduct', (req, res) => {
+    try {
+        const wsServer = req.app.get('ws');
+        const { title, description, price, thumbnail, code, stock, category } = req.body;
+        const newProductId = productManager.newId(); 
+        const newProduct = {
+            id: newProductId,
+            title,
+            description,
+            price,
+            thumbnail,
+            code,
+            stock,
+            category
+        };
+        productManager.addProduct(id, title, description, price, thumbnail, code, stock, category);
+        wsServer.emit('addProduct', newProduct); 
+        res.status(201).json(newProduct);
+    } catch (error) {
+        console.error('Error al agregar un nuevo producto:', error);
+        res.status(500).send('Error al agregar un nuevo producto');
+    }
+}); */
 
     clientSocket.on('new-message', (message) => {
         wsServer.emit('message', { id: clientSocket.id, text: message });
