@@ -4,7 +4,7 @@
     gap: 5vh;
 }
 
-.listaProductos{
+#productos{
     background-color: rgb(245, 35, 35);
     margin: 20px;
     padding: 10px;
@@ -15,10 +15,17 @@
     box-shadow: 8px 8px 10px black;
     display: flex;
     flex-wrap: wrap;
-    gap: 2.5vh;
-    
+    gap: 5vh;
+    font-size: 2vh;
+    justify-content: center;
 }
 
+#productos div{
+    background-color: black;
+    padding: 20px;
+    max-width: 45vh;
+    min-width: 45vh;
+}
 
 
 .chat{
@@ -31,6 +38,8 @@
 
 .formProduct{
     background-color: green;
+    align-content: right;
+    width: 125vh;
 }
 
 .delProduct{

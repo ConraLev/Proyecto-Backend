@@ -1,9 +1,112 @@
 [
-    {"title":"MANTECA",
-    "description":"100",
-    "price":"100",
-    "thumbnail": "Sin imagen",
-    "code":"10",
-    "stock":"10",
-    "category":"0"}
+	{
+		"id": 1,
+		"title": "Casco de moto",
+		"description": "Casco de seguridad para motociclistas",
+		"price": 45000,
+		"thumbnail": "Sin imagen",
+		"code": "583921",
+		"stock": 25,
+		"category": "Indumentaria"
+	},
+	{
+		"id": 2,
+		"title": "Chaqueta de cuero",
+		"description": "Chaqueta de cuero para motociclistas",
+		"price": 70000,
+		"thumbnail": "Sin imagen",
+		"code": "740856",
+		"stock": 15,
+		"category": "Indumentaria"
+	},
+	{
+		"id": 3,
+		"title": "Guantes para moto",
+		"description": "Guantes de protección para motociclistas",
+		"price": 15000,
+		"thumbnail": "Sin imagen",
+		"code": "209743",
+		"stock": 30,
+		"category": "Indumentaria"
+	},
+	{
+		"id": 4,
+		"title": "Botas para moto",
+		"description": "Botas de cuero para motociclistas",
+		"price": 30000,
+		"thumbnail": "Sin imagen",
+		"code": "365812",
+		"stock": 14,
+		"category": "Indumentaria"
+	},
+	{
+		"id": 5,
+		"title": "Pantalones de moto",
+		"description": "Pantalones de protección para motociclistas",
+		"price": 25000,
+		"thumbnail": "Sin imagen",
+		"code": "918274",
+		"stock": 17,
+		"category": "Indumentaria"
+	},
+	{
+		"id": 6,
+		"title": "Kit de limpieza para moto",
+		"description": "Kit completo para mantener tu moto limpia",
+		"price": 4500,
+		"thumbnail": "Sin imagen",
+		"code": "472630",
+		"stock": 50,
+		"category": "Varios"
+	},
+	{
+		"id": 7,
+		"title": "Aceite para moto",
+		"description": "Aceite de motor de alta calidad para motocicletas",
+		"price": 9000,
+		"thumbnail": "Sin imagen",
+		"code": "185943",
+		"stock": 42,
+		"category": "Lubricantes"
+	},
+	{
+		"id": 8,
+		"title": "Candado para moto",
+		"description": "Candado de seguridad para motocicletas",
+		"price": 5000,
+		"thumbnail": "Sin imagen",
+		"code": "694127",
+		"stock": 15,
+		"category": "Varios"
+	},
+	{
+		"id": 9,
+		"title": "Cubremanos para moto",
+		"description": "Accesorio para proteger las manos del frío y el viento",
+		"price": 3000,
+		"thumbnail": "Sin imagen",
+		"code": "530871",
+		"stock": 20,
+		"category": "Varios"
+	},
+	{
+		"id": 10,
+		"title": "Protector de tanque",
+		"description": "Protector adhesivo para evitar rayones en el tanque de la moto",
+		"price": 5000,
+		"thumbnail": "Sin imagen",
+		"code": "817436",
+		"stock": 40,
+		"category": "Varios"
+	},
+	{
+		"id": 11,
+		"title": "Aceite Cadena Moto",
+		"description": "Aceite para cadena de moto de alta calidad",
+		"price": 10000,
+		"thumbnail": "Sin Imagen",
+		"code": "185543",
+		"stock": 100,
+		"category": "Lubricantes"
+	}
 ]
