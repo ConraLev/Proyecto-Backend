@@ -6,8 +6,6 @@ const handlebars = require('express-handlebars');
 const { Server } = require('socket.io');
 const app = express();
 const port = 8080;
-const products = [];
-const fs = require('fs');
 const ProductManager = require(`${__dirname}/ProductManager`);
 const productManager = new ProductManager();
 
@@ -31,9 +29,19 @@ wsServer.on('connection', (clientSocket) => {
             await productManager.addProduct(title, description, price, thumbnail, code, stock, category);
             const newProduct = productManager.getProductById(newProductId);
         
-            clientSocket.emit('updateProducts', newProduct);
+            wsServer.emit('updateProducts', newProduct);
         } catch (error) {
             console.error('Error al crear un nuevo producto:', error);
+        }
+    });
+
+    clientSocket.on('deleteProduct', async (productId) => { 
+        try {
+            const id = parseInt(productId);
+            await productManager.deleteProduct(id);
+            wsServer.emit('productDeleted', id);
+        } catch (error) {
+            console.error('Error al eliminar el producto:', error);
         }
     });
 

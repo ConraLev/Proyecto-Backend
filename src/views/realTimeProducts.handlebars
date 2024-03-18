@@ -1,7 +1,7 @@
 <div id="prodMasChat" class="prodMasChat">
     <div class="listaProd" id="productos">
     {{#each products}}
-        <div class="listaProductos">
+        <div class="listaProductos" id="producto_{{id}}">
             ID PRODUCTO: {{id}} <br>
             NOMBRE: {{title}} <br>
             DESCRIPCION: {{description}} <br>
@@ -33,10 +33,10 @@
             <input id="category" type="text" name="category"> <br>
             <button type="submit">Cargar Producto</button>
         </form>
-        <div class="delProduct"> 
-            <h2>Ingrese producto a borrar</h2>
-            <input type="number" id="DelProductId">
-            <button type="submit">Borrar Producto</button>
+        <div class="delProduct">
+                <h2>Ingrese producto a borrar</h2>
+                <input type="number" id="DelProductId">
+                <button id="btnBorrar" type="submit">Borrar Producto</button>
         </div>
            
     </div>
