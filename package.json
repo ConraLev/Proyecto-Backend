@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": ".src/app"
+    "start": "node src/app"
   },
   "dependencies": {
     "express": "^4.18.3",
