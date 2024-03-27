@@ -35,6 +35,12 @@
 
 }
 
+#chatBox{
+    background-color: red;
+    width: 70vh;
+    height: 60vh;
+}
+
 
 .formProduct{
     background-color: green;

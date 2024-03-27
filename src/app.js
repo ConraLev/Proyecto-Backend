@@ -8,6 +8,8 @@ const app = express();
 const port = 8080;
 const ProductManager = require(`${__dirname}/ProductManager`);
 const productManager = new ProductManager();
+const messageHistory = []
+
 
 const httpServer = app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
@@ -16,11 +18,14 @@ const httpServer = app.listen(port, () => {
 const wsServer = new Server(httpServer);
 app.set('ws', wsServer);
 
+
 wsServer.on('connection', (clientSocket) => {
     console.log(`Cliente conectado ID: ${clientSocket.id}`);
-    clientSocket.emit('saludo', `Bienvenido ID: ${clientSocket.id}`);
     
-
+    for(const data of messageHistory){
+        clientSocket.emit('message', data)
+    }
+        
     clientSocket.on('addProduct', async (receivedProduct) => {
         try {
             const { title, description, price, thumbnail, code, stock, category } = receivedProduct; 
@@ -44,6 +49,21 @@ wsServer.on('connection', (clientSocket) => {
             console.error('Error al eliminar el producto:', error);
         }
     });
+
+    clientSocket.on('new-message', (user, message) =>{
+        try{
+            wsServer.emit('message',{ user, text: message})
+            messageHistory.push ({user, text: message})
+        } catch (error){
+            console.error('Error al procesar el nuevo mensaje:', error);
+        }
+    })
+
+    clientSocket.on('user-connected', (user) =>{
+        clientSocket.broadcast.emit('user-joined', user)
+    })
+
+    
 
 });
 

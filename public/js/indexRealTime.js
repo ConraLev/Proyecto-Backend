@@ -1,8 +1,5 @@
 const socket = io();
 
-socket.on('saludo', (event) => {
-    console.log(event);
-});
 
 document.querySelector('#productForm').addEventListener('submit', (e) => {
     e.preventDefault();

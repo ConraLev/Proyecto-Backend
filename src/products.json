@@ -108,5 +108,25 @@
 		"code": "185543",
 		"stock": 100,
 		"category": "Lubricantes"
+	},
+	{
+		"id": 12,
+		"title": "Parabrisas",
+		"description": "Deflector de viento ",
+		"price": "25000",
+		"thumbnail": "",
+		"code": "4627924",
+		"stock": "10",
+		"category": "Varios"
+	},
+	{
+		"id": 13,
+		"title": "WD-40",
+		"description": "Elimina humedad y lubrica",
+		"price": "7500",
+		"thumbnail": "",
+		"code": "763192",
+		"stock": "25",
+		"category": "Lubricantes"
 	}
 ]
