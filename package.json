@@ -3,9 +3,18 @@
     "start": "node src/app"
   },
   "dependencies": {
-    "express": "^4.18.3",
+    "express": "^4.19.2",
     "express-handlebars": "^7.1.2",
     "moment": "^2.30.1",
+    "mongodb": "^6.5.0",
+    "mongoose": "^8.2.4",
     "socket.io": "^4.7.4"
-  }
+  },
+  "name": "proyecto-backend",
+  "description": "Curso Programación Backend CODERHOUSE\r Comisión 53115\r Alumno: Conrado Levanti",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Conrado Levanti",
+  "license": "ISC"
 }

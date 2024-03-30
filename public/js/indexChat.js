@@ -17,22 +17,29 @@ Swal.fire({
 });
 
 
-/* Swal.fire({
-    text: '${} se unio',
-    toast: true,
-    position: 'top-center'
-});
- */
+
+/* document.querySelector('#btnEnviar').addEventListener('click', () => {
+    const mensaje = document.querySelector('#envMensaje').value;
+    socket.emit('new-mensaje', user, mensaje);
+    document.querySelector('#envMensaje').value = '';
+}); */
 
 document.querySelector('#btnEnviar').addEventListener('click', () => {
-    const message = document.querySelector('#envMensaje').value;
-    socket.emit('new-message', user, message);
+    const mensaje = document.querySelector('#envMensaje').value;
+    if (mensaje && mensaje.trim() !== '') { 
+        socket.emit('new-message', user, mensaje);
+/*         console.log(`${user} y ${mensaje} en BTN DE ENVIAR`) */
+        document.querySelector('#envMensaje').value = '';
+    } else {
+        console.error('El mensaje no puede estar vacío');
+    }
 });
 
 
-socket.on('message', (message) => {
+
+socket.on('mensaje', (mensaje) => {
     const mensajeChat = document.createElement('p');
-    mensajeChat.innerText = `${message.user}: ${message.text}`;
+    mensajeChat.innerText = `${mensaje.user}: ${mensaje.text}`;
     document.querySelector('#chatBox').appendChild(mensajeChat);
 });
 
@@ -45,9 +52,4 @@ socket.on('user-joined', (user) =>{
       });
 
 
-
-    /* Swal.fire({
-    text: `${user} se unio`,
-    toast: true,
-    position: 'top-center' */
 });

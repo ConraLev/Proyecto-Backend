@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ProductManager = require('../ProductManager');
+const ProductManager = require('../../dao/FileSystem/ProductManager');
 const productsRouter = require('./products.Router');
 const productManager = new ProductManager();
 const { Server } = require('socket.io');

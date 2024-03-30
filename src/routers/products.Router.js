@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-const ProductManager = require('../ProductManager');
+const ProductManager = require('../../dao/FileSystem/ProductManager');
 const productManager = new ProductManager();
 
 
