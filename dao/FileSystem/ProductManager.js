@@ -1,4 +1,6 @@
 const fs = require('fs');
+const Products = require('../models/products.model')
+
 
 // Creacion de clase
 class ProductManager {
@@ -35,13 +37,30 @@ class ProductManager {
         }
 
         //Creacion de ID para productos     
-        newId() {
+        /* newId() {
             const maxId = this.products.reduce((max, product) => {
                 return product.id > max ? product.id : max;
             }, 0);
         
             return maxId + 1;
+        } */
+
+        //Creacion de ID para productos desde DB
+        async newId() {
+            try {
+                const productWithMaxId = await Products.findOne({}, {}, { sort: { 'id': -1 } });
+        
+                if (!productWithMaxId) {
+                    return 1;
+                }
+        
+                return productWithMaxId.id + 1;
+            } catch (error) {
+                console.error('Error al obtener el nuevo ID:', error);
+                throw new Error('Error al obtener el nuevo ID');
+            }
         }
+        
         
 
 

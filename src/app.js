@@ -31,34 +31,29 @@ mongoose.connect('mongodb+srv://ConraLev:admin-pass@ecommerce.ru9cifu.mongodb.ne
 wsServer.on('connection', (clientSocket) => {
     console.log(`Cliente conectado ID: ${clientSocket.id}`);
     
-        
     clientSocket.on('addProduct', async (receivedProduct) => {
         try {
-            const { title, description, price, thumbnail, code, stock, category } = receivedProduct; 
-                
-            const newProductId = productManager.newId();
-            await productManager.addProduct(title, description, price, thumbnail, code, stock, category);
-            const newProduct = productManager.getProductById(newProductId);
-            const newDBProduct = new Products({
-                
+            const { title, description, price, thumbnail, code, stock, category } = receivedProduct;
+            const newProductId = await productManager.newId();
+            const newProduct = new Products({
+                id: newProductId,
                 title: title,
                 description: description,
                 price: price,
                 thumbnail: thumbnail,
                 code: code,
                 stock: stock,
-                category: category,
+                category: category
+            });
     
-            })
-            await newDBProduct.save();
-        
+            await newProduct.save();
             wsServer.emit('updateProducts', newProduct);
         } catch (error) {
             console.error('Error al crear un nuevo producto:', error);
         }
     });
 
-    clientSocket.on('deleteProduct', async (productId) => { 
+ /*   FS.DeleteProduct = clientSocket.on('deleteProduct', async (productId) => { 
         try {
             const id = parseInt(productId);
             await productManager.deleteProduct(id);
@@ -66,9 +61,32 @@ wsServer.on('connection', (clientSocket) => {
         } catch (error) {
             console.error('Error al eliminar el producto:', error);
         }
+    }); */
+
+    clientSocket.on('deleteProduct', async (productId) => { 
+        try {
+            const deletedProduct = await Products.findOneAndDelete({id: productId});
+
+            if (!deletedProduct) {
+                wsServer.emit('productDeleteError', `No se encontró el producto con ID ${productId}`);
+            } else {
+                wsServer.emit('productDeleted', productId);
+            }
+        } catch (error) {
+            console.error('Error al eliminar el producto:', error);
+            wsServer.emit('productDeleteError', `Error al eliminar el producto: ${error.message}`);
+        }
     });
 
-    
+    clientSocket.on('get-messages', async () => {
+        try {
+            const messages = await Message.find().sort({ createdAt: 1 }); 
+            clientSocket.emit('load-messages', messages); 
+        } catch (error) {
+            console.error('Error al obtener los mensajes:', error);
+        }
+    });
+
     clientSocket.on('new-message', async (user, mensaje) =>{
         try{
             const nuevoMensaje = new Message({

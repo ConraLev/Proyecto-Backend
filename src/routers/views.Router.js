@@ -1,24 +1,53 @@
 const express = require('express');
 const router = express.Router();
-const ProductManager = require('../../dao/FileSystem/ProductManager');
-const productsRouter = require('./products.Router');
-const productManager = new ProductManager();
 const { Server } = require('socket.io');
+const Products = require('../../dao/models/products.model');
+const Message = require('../../dao/models/messages.model');
 
 
-router.get('/', (_, res) => {
-    const products = productManager.getProducts();
-    res.render('home', { title: 'Lista Productos', products, styles: ['style'], useWS: false, scripts: ['index'] })
+router.get('/', async (req, res) => {
+    try {
+        const limit = req.query.limit;
+        let products = [];
+
+        if (limit) {
+            const parsedLimit = parseInt(limit);
+            if (!isNaN(parsedLimit)) {
+                products = await Products.find().limit(parsedLimit);
+            } else {
+                return res.status(400).json({ error: 'El parámetro de límite debe ser un número válido' });
+            }
+        } else {
+            products = await Products.find().lean();
+        }
+        
+        res.render('home', { title: 'Lista Productos', products, styles: ['style'], useWS: false, scripts: ['index'] });
+    } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).json({ error: 'Error al obtener los productos' });
+    }
 });
-    
-router.get('/realtimeproducts', (_, res) => {
-    const products = productManager.getProducts();
-    res.render('realtimeproducts', { title: 'Lista Actualizacion', products, styles: ['style'], useWS: true, scripts: ['indexRealTime'] })
+
+
+
+router.get('/realtimeproducts', async (_, res) => {
+    try {
+        const products = await Products.find().lean();
+        res.render('realtimeproducts', { title: 'Lista Actualizacion', products, styles: ['style'], useWS: true, scripts: ['indexRealTime'] });
+    } catch (error) {
+        console.error('Error al obtener los productos en tiempo real:', error);
+        res.status(500).json({ error: 'Error al obtener los productos en tiempo real' });
+    }
 });
 
-router.get('/chat', (req,  res) =>{
-    res.render('chat',{ tittle:'Chat', styles: ['style'], useWS: true, useSweetAlert: true, scripts: ['indexChat']})
-})
-    
+router.get('/chat', async (req, res) => {
+    try {
+        const lastMessages = await Message.find().sort({ createdAt: -1 }).limit(10); // Obtén los últimos 10 mensajes, por ejemplo
+        res.render('chat', { title: 'Chat', styles: ['style'], useWS: true, useSweetAlert: true, scripts: ['indexChat'], lastMessages });
+    } catch (error) {
+        console.error('Error al obtener los últimos mensajes:', error);
+        res.status(500).json({ error: 'Error al obtener los últimos mensajes del servidor' });
+    }
+});
+
 module.exports = router;
-

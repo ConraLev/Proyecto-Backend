@@ -1,11 +1,10 @@
 const socket = io();
 
 let user;
-let chatBox = document.querySelector('chatBox')
 
 Swal.fire({
-    title: 'Ingrese su Alias',
-    text: 'Ingresa tu usuario para indentificarte',
+    title: 'Ingrese su Mail',
+    text: 'Ingresa tu mail para indentificarte',
     input: 'text',
     inputValidator: (value) => {
         return !value && 'Debe escribir nombre para ingresar'
@@ -17,7 +16,9 @@ Swal.fire({
 });
 
 
-
+document.addEventListener('DOMContentLoaded', () => {
+    socket.emit('get-messages');
+});
 
 document.querySelector('#btnEnviar').addEventListener('click', () => {
     const mensaje = document.querySelector('#envMensaje').value;
@@ -46,4 +47,12 @@ socket.on('user-joined', (user) =>{
       });
 
 
+});
+
+socket.on('load-messages', (messages) => {
+    messages.forEach(message => {
+        const mensajeChat = document.createElement('p');
+        mensajeChat.innerText = `${message.user}: ${message.text}`;
+        document.querySelector('#chatBox').appendChild(mensajeChat);
+    });
 });
