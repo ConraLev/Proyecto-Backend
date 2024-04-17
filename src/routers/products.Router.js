@@ -11,6 +11,58 @@ const mongoose = require('mongoose');
 
 
 router.get('/', async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 10;
+        const page = parseInt(req.query.page) || 1;
+        const sort = req.query.sort === 'desc' ? -1 : 1;
+        const query = req.query.query || '';
+
+        const match = {};
+        if (query) {
+            match.$or = [
+                { category: { $regex: query, $options: 'i' } },
+                { availability: { $regex: query, $options: 'i' } }
+            ];
+        }
+
+        const totalProducts = await Product.countDocuments(match);
+        const totalPages = Math.ceil(totalProducts / limit);
+
+        const skip = (page - 1) * limit;
+
+        const products = await Product.find(match)
+            .sort({ price: sort })
+            .skip(skip)
+            .limit(limit);
+
+        const hasNextPage = page < totalPages;
+        const hasPrevPage = page > 1;
+
+        const prevPage = hasPrevPage ? page - 1 : null;
+        const nextPage = hasNextPage ? page + 1 : null;
+
+        const prevLink = hasPrevPage ? `/products?page=${prevPage}&limit=${limit}&sort=${req.query.sort}&query=${query}` : null;
+        const nextLink = hasNextPage ? `/products?page=${nextPage}&limit=${limit}&sort=${req.query.sort}&query=${query}` : null;
+
+        res.json({
+            status: 'success',
+            payload: products,
+            totalPages,
+            prevPage,
+            nextPage,
+            page,
+            hasPrevPage,
+            hasNextPage,
+            prevLink,
+            nextLink
+        });
+    } catch (error) {
+        console.error('Error al obtener productos:', error);
+        res.status(500).json({ status: 'error', message: 'Error al obtener productos' });
+    }
+});
+
+/* router.get('/', async (req, res) => {
     const limit = req.query.limit;
 
     try {
@@ -32,7 +84,7 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Error al leer los productos' });
     }
 });
-
+ */
 
 
 //Obtener productos por ID

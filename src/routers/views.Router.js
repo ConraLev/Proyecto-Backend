@@ -28,7 +28,15 @@ router.get('/', async (req, res) => {
     }
 });
 
-
+router.get('/products', async (req, res) => {
+    try {
+        const products = await Product.find();
+        res.render('products', { title: 'Lista de Productos', products });
+    } catch (error) {
+        console.error('Error al obtener la lista de productos:', error);
+        res.status(500).json({ status: 'error', message: 'Error al obtener la lista de productos' });
+    }
+});
 
 router.get('/realtimeproducts', async (_, res) => {
     try {
