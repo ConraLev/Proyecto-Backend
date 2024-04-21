@@ -7,7 +7,7 @@ class ProductManager {
     constructor(path = './products.json') {
         this.path = path
         this.products = [];
-        this.loadProduct();
+       /*  this.loadProduct(); */
         // Contador para asignar IDs
         this.contadorId = 1;       
     }   
@@ -27,14 +27,14 @@ class ProductManager {
 
         //Cargar productos en archivo JSON
 
-        async loadProduct(){
+       /*  async loadProduct(){
             try{
                 const data = await fs.promises.readFile(this.path, 'utf-8')
                 this.products = JSON.parse(data);
             } catch (error){
                 console.log('Error al leer el archivo')     
             }
-        }
+        } */
 
         //Creacion de ID para productos     
         /* newId() {

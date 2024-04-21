@@ -3,8 +3,8 @@ const router = express.Router();
 const fs = require('fs');
 const ProductManager = require('../../dao/FileSystem/ProductManager');
 const productManager = new ProductManager();
-const Products = require('../../dao/models/products.model');
 const mongoose = require('mongoose');
+const Products = require('../../dao/models/products.model');
 
 
 //Obtener listado de todos los productos o limitarlo por cantidad
