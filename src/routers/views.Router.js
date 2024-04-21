@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
 
 router.get('/products', async (req, res) => {
     try {
-        const products = await Product.find();
+        const products = await Products.find();
         res.render('products', { title: 'Lista de Productos', products });
     } catch (error) {
         console.error('Error al obtener la lista de productos:', error);
@@ -50,7 +50,7 @@ router.get('/realtimeproducts', async (_, res) => {
 
 router.get('/chat', async (req, res) => {
     try {
-        const lastMessages = await Message.find().sort({ createdAt: -1 }).limit(10); // Obtén los últimos 10 mensajes, por ejemplo
+        const lastMessages = await Message.find().sort({ createdAt: -1 }).limit(10); 
         res.render('chat', { title: 'Chat', styles: ['style'], useWS: true, useSweetAlert: true, scripts: ['indexChat'], lastMessages });
     } catch (error) {
         console.error('Error al obtener los últimos mensajes:', error);

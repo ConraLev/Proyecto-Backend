@@ -25,12 +25,12 @@ router.get('/', async (req, res) => {
             ];
         }
 
-        const totalProducts = await Product.countDocuments(match);
+        const totalProducts = await Products.countDocuments(match);
         const totalPages = Math.ceil(totalProducts / limit);
 
         const skip = (page - 1) * limit;
 
-        const products = await Product.find(match)
+        const products = await Products.find(match)
             .sort({ price: sort })
             .skip(skip)
             .limit(limit);

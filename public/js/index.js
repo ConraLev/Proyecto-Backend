@@ -31,17 +31,3 @@ socket.on('productsUpdateError', (errorMessage) => {
 
 });
 
-/* socket.on('updateProducts', (products) => {
-    const producto = document.createElement('div');
-    producto.innerText = `
-    ID PRODUCTO: ${products.id}
-    NOMBRE: ${products.title}
-    DESCRIPCION: ${products.description}
-    PRECIO: ${products.price}
-    IMAGENES: ${products.thumbnails}
-    CODIGO: ${products.code}
-    STOCK: ${products.stock}
-    CATEGORIA: ${products.category}
-    `;
-    document.querySelector('#productos').appendChild(producto);
-}); */
