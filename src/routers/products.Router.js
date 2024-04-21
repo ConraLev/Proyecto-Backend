@@ -16,6 +16,8 @@ router.get('/', async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const sort = req.query.sort === 'desc' ? -1 : 1;
         const query = req.query.query || '';
+        const category = req.query.category || '';
+        const availability = req.query.availability || '';
 
         const match = {};
         if (query) {
@@ -23,6 +25,12 @@ router.get('/', async (req, res) => {
                 { category: { $regex: query, $options: 'i' } },
                 { availability: { $regex: query, $options: 'i' } }
             ];
+        }
+        if (category) {
+            match.category = { $regex: category, $options: 'i' };
+        }
+        if (availability) {
+            match.availability = { $regex: availability, $options: 'i' };
         }
 
         const totalProducts = await Products.countDocuments(match);
@@ -41,8 +49,8 @@ router.get('/', async (req, res) => {
         const prevPage = hasPrevPage ? page - 1 : null;
         const nextPage = hasNextPage ? page + 1 : null;
 
-        const prevLink = hasPrevPage ? `/products?page=${prevPage}&limit=${limit}&sort=${req.query.sort}&query=${query}` : null;
-        const nextLink = hasNextPage ? `/products?page=${nextPage}&limit=${limit}&sort=${req.query.sort}&query=${query}` : null;
+        const prevLink = hasPrevPage ? `/products?page=${prevPage}&limit=${limit}&sort=${req.query.sort}&query=${query}&category=${category}&availability=${availability}` : null;
+        const nextLink = hasNextPage ? `/products?page=${nextPage}&limit=${limit}&sort=${req.query.sort}&query=${query}&category=${category}&availability=${availability}` : null;
 
         res.json({
             status: 'success',
