@@ -33,12 +33,12 @@ router.get('/', async (req, res) => {
             match.availability = { $regex: availability, $options: 'i' };
         }
 
-        const totalProducts = await Products.countDocuments(match);
+        const totalProducts = await Products.countDocuments(match).lean();
         const totalPages = Math.ceil(totalProducts / limit);
 
         const skip = (page - 1) * limit;
 
-        const products = await Products.find(match)
+        const products = await Products.find(match).lean()
             .sort({ price: sort })
             .skip(skip)
             .limit(limit);
@@ -52,7 +52,7 @@ router.get('/', async (req, res) => {
         const prevLink = hasPrevPage ? `/products?page=${prevPage}&limit=${limit}&sort=${req.query.sort}&query=${query}&category=${category}&availability=${availability}` : null;
         const nextLink = hasNextPage ? `/products?page=${nextPage}&limit=${limit}&sort=${req.query.sort}&query=${query}&category=${category}&availability=${availability}` : null;
 
-        res.json({
+        /* res.json({
             status: 'success',
             payload: products,
             totalPages,
@@ -63,9 +63,9 @@ router.get('/', async (req, res) => {
             hasNextPage,
             prevLink,
             nextLink
-        });
+        }); */
 
-    /*     res.render('home', {
+        res.render('home', {
             title: 'Lista Productos',
             products,
             styles: ['style'],
@@ -79,7 +79,7 @@ router.get('/', async (req, res) => {
             hasNextPage,
             prevLink,
             nextLink
-        }); */
+        });
 
 
     } catch (error) {

@@ -24,14 +24,14 @@ router.get('/login', (req, res, next) => {
     });
 });
 
-/* router.get('/register', (req, res, next) => {
+router.get('/register', (req, res, next) => {
     if (req.session && req.session.user) {
         return res.redirect('/');
     }
     res.render('register', {
         title: 'Register'
     });
-}); */
+});
 
 router.get('/profile', async (req, res, next) => {
     try {
@@ -40,7 +40,7 @@ router.get('/profile', async (req, res, next) => {
         }
 
         const userId = req.session.user._id;
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).lean();
 
         if (!user) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
@@ -56,8 +56,7 @@ router.get('/profile', async (req, res, next) => {
     }
 });
 
-
-router.get('/profile', (req, res, next) => {
+/* router.get('/profile', (req, res, next) => {
     if (!req.session || !req.session.user) {
         return res.redirect('/login');
     }
@@ -68,7 +67,7 @@ router.get('/profile', (req, res, next) => {
         title: 'My profile',
         user: user
     });
-});
+}); */
 
 router.get('/realtimeproducts', async (_, res) => {
     try {

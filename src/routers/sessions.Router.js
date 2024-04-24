@@ -30,13 +30,13 @@ router.post('/register', async (req, res) => {
         const user = new User({
             firstName,
             lastName,
-            age,
+            age: +age,
             email,
             password
         });
 
         await user.save();
-        /* req.session.user = {email, id:user.id.toString()} */
+        req.session.user = {email, id:user.id.toString()}
 
         res.redirect('/');
     } catch (error) {
