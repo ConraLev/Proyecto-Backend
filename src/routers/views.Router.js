@@ -3,39 +3,71 @@ const router = express.Router();
 const { Server } = require('socket.io');
 const Products = require('../../dao/models/products.model');
 const Message = require('../../dao/models/messages.model');
+const User = require('../../dao/models/user.model')
 
 
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
+    const isLoggedIn = ![null, undefined].includes(req.session.user)
+
+    res.render('index', { title: 'Login', styles: ['loginStyle'], useWS: false, scripts: ['index'], isLoggedIn,
+    isNotLoggedIn: !isLoggedIn });
+
+})
+
+
+router.get('/login', (req, res, next) => {
+    if (req.session && req.session.user) {
+        return res.redirect('/');
+    }
+    res.render('login', {
+        title: 'Login'
+    });
+});
+
+/* router.get('/register', (req, res, next) => {
+    if (req.session && req.session.user) {
+        return res.redirect('/');
+    }
+    res.render('register', {
+        title: 'Register'
+    });
+}); */
+
+router.get('/profile', async (req, res, next) => {
     try {
-        const limit = req.query.limit;
-        let products = [];
-
-        if (limit) {
-            const parsedLimit = parseInt(limit);
-            if (!isNaN(parsedLimit)) {
-                products = await Products.find().limit(parsedLimit);
-            } else {
-                return res.status(400).json({ error: 'El parámetro de límite debe ser un número válido' });
-            }
-        } else {
-            products = await Products.find().lean();
+        if (!req.session || !req.session.user) {
+            return res.redirect('/login');
         }
-        
-        res.render('home', { title: 'Lista Productos', products, styles: ['style'], useWS: false, scripts: ['index'] });
+
+        const userId = req.session.user._id;
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        res.render('profile', {
+            title: 'My profile',
+            user: user
+        });
     } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).json({ error: 'Error al obtener los productos' });
+        console.error('Error al obtener perfil de usuario:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
-router.get('/products', async (req, res) => {
-    try {
-        const products = await Products.find();
-        res.render('products', { title: 'Lista de Productos', products });
-    } catch (error) {
-        console.error('Error al obtener la lista de productos:', error);
-        res.status(500).json({ status: 'error', message: 'Error al obtener la lista de productos' });
+
+router.get('/profile', (req, res, next) => {
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
     }
+
+    const user = req.session.user;
+
+    res.render('profile', {
+        title: 'My profile',
+        user: user
+    });
 });
 
 router.get('/realtimeproducts', async (_, res) => {

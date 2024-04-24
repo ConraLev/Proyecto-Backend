@@ -64,35 +64,64 @@ router.get('/', async (req, res) => {
             prevLink,
             nextLink
         });
+
+    /*     res.render('home', {
+            title: 'Lista Productos',
+            products,
+            styles: ['style'],
+            useWS: false,
+            scripts: ['index'],
+            totalPages,
+            prevPage,
+            nextPage,
+            page,
+            hasPrevPage,
+            hasNextPage,
+            prevLink,
+            nextLink
+        }); */
+
+
     } catch (error) {
         console.error('Error al obtener productos:', error);
         res.status(500).json({ status: 'error', message: 'Error al obtener productos' });
     }
 });
 
-/* router.get('/', async (req, res) => {
-    const limit = req.query.limit;
 
+/* router.get('/', async (req, res) => {
     try {
-        let products;
+        const limit = req.query.limit;
+        let products = [];
 
         if (limit) {
             const parsedLimit = parseInt(limit);
-            if (isNaN(parsedLimit)) {
-                return res.status(400).json({ error: 'Debe ser un número válido' });
+            if (!isNaN(parsedLimit)) {
+                products = await Products.find().limit(parsedLimit);
+            } else {
+                return res.status(400).json({ error: 'El parámetro de límite debe ser un número válido' });
             }
-            products = await Products.find().limit(parsedLimit);
         } else {
-            products = await Products.find();
+            products = await Products.find().lean();
         }
-
-        res.json(products);
+        
+        res.render('home', { title: 'Lista Productos', products, styles: ['style'], useWS: false, scripts: ['index'] });
     } catch (error) {
-        console.error('Error al leer los productos:', error);
-        res.status(500).json({ error: 'Error al leer los productos' });
+        console.error('Error al obtener los productos:', error);
+        res.status(500).json({ error: 'Error al obtener los productos' });
     }
-});
- */
+}); */
+
+/* router.get('/products', async (req, res) => {
+        try {
+            const products = await Products.find();
+            res.render('products', { title: 'Lista de Productos', products });
+        } catch (error) {
+            console.error('Error al obtener la lista de productos:', error);
+            res.status(500).json({ status: 'error', message: 'Error al obtener la lista de productos' });
+        }
+}); */
+
 
 
 //Obtener productos por ID
