@@ -107,9 +107,6 @@ wsServer.on('connection', (clientSocket) => {
         clientSocket.broadcast.emit('user-joined', user)
     })
     
-    /* clientSocket.on('user-login', (user) =>{
-
-    }) */
 
     /*   FS.DeleteProduct = clientSocket.on('deleteProduct', async (productId) => { 
            try {
