@@ -13,9 +13,12 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({error: 'No se encontro el usuario'})
     }
 
-    req.session.user = { email, _id: user._id.toString()}
-    res.redirect('/')
+    req.session.user = { email: user.email, firstName: user.firstName, lastName: user.lastName, _id: user._id.toString(), role: user.role }
+    res.redirect('/products')
 })
+ 
+
+
 
 router.post('/register', async (req, res) => {
     try {
@@ -36,9 +39,9 @@ router.post('/register', async (req, res) => {
         });
 
         await user.save();
-        req.session.user = {email, id:user.id.toString()}
+        req.session.user = { email: user.email, firstName: user.firstName, lastName: user.lastName, _id: user._id.toString(), role: user.role }
 
-        res.redirect('/');
+        res.redirect('/products');
     } catch (error) {
         console.error('Error al registrar usuario:', error);
         res.status(500).json({ error: 'Error interno del servidor' });

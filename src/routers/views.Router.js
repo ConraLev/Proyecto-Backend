@@ -56,18 +56,16 @@ router.get('/profile', async (req, res, next) => {
     }
 });
 
-/* router.get('/profile', (req, res, next) => {
-    if (!req.session || !req.session.user) {
-        return res.redirect('/login');
-    }
 
-    const user = req.session.user;
-
-    res.render('profile', {
-        title: 'My profile',
-        user: user
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error al cerrar sesión:', err);
+        }
+        res.redirect('/');
     });
-}); */
+});
+
 
 router.get('/realtimeproducts', async (_, res) => {
     try {

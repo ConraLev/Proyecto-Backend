@@ -1,10 +1,21 @@
 <div>
     {{#if isNotLoggedIn}}
-    <a href="/login">Ingresar</a>
-    <a href="/register">Registrarse</a>
+    <div class="login" id="login">
+        <h1>LOGIN</h1>
+        <form class="loginForm" action="/sessions/login" method="post" enctype="application/x-www-form-urlencoded">
+            <input type="email" name="email" id="_email" placeholder="Email" /> <br>
+            <input type="password" name="password" id="_pass" placeholder="Password"/><br>
+            <button id="BtnNoLog" class="BtnNoLog" type="submit">Login</button>
+            <button id="BtnNoLog" class="BtnNoLog"><a href="/register">Registrarse</a></button>
+        </form>
+    </div>
     {{/if}}
 
     {{#if isLoggedIn}}
+    <a href="/products">Ingresar al Sitio</a>
     <a href="/profile">Mi Perfil</a>
+    <form action="/logout" method="GET">
+        <button type="submit">Logout</button>
+    </form>
     {{/if}}
 </div>

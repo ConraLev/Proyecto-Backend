@@ -7,7 +7,7 @@ const { dbName, mongoUrl } = require('../dbConfig');
 const store = MongoStore.create({
     mongoUrl: mongoUrl,
     dbName: dbName,
-    ttl: 60
+    ttl: 120
 });
 
 const sessionMiddleware = session({

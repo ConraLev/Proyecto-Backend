@@ -13,10 +13,13 @@ const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
 const Message = require('../dao/models/messages.model');
 const Products = require('../dao/models/products.model');
+const User = require('../dao/models/user.model')
 const cookieParser = require('cookie-parser');
-/* const FileStore = require('session-file-store');*/
 const sessionMiddleware = require('./sessions/mongoStorage');
 const {dbName, mongoUrl} = require('./dbConfig');
+
+
+/* const FileStore = require('session-file-store');*/
 
 const httpServer = app.listen(8080, () => {
     console.log(`Servidor escuchando en http://localhost:8080`);
@@ -61,16 +64,7 @@ wsServer.on('connection', (clientSocket) => {
         }
     });
 
- /*   FS.DeleteProduct = clientSocket.on('deleteProduct', async (productId) => { 
-        try {
-            const id = parseInt(productId);
-            await productManager.deleteProduct(id);
-            wsServer.emit('productDeleted', id);
-        } catch (error) {
-            console.error('Error al eliminar el producto:', error);
-        }
-    }); */
-
+    
     clientSocket.on('deleteProduct', async (productId) => { 
         try {
             const deletedProduct = await Products.findOneAndDelete({id: productId});
@@ -85,7 +79,7 @@ wsServer.on('connection', (clientSocket) => {
             wsServer.emit('productDeleteError', `Error al eliminar el producto: ${error.message}`);
         }
     });
-
+    
     clientSocket.on('get-messages', async () => {
         try {
             const messages = await Message.find().sort({ createdAt: 1 }); 
@@ -94,7 +88,7 @@ wsServer.on('connection', (clientSocket) => {
             console.error('Error al obtener los mensajes:', error);
         }
     });
-
+    
     clientSocket.on('new-message', async (user, mensaje) =>{
         try{
             const nuevoMensaje = new Message({
@@ -102,7 +96,7 @@ wsServer.on('connection', (clientSocket) => {
                 text: mensaje,
             })
             await nuevoMensaje.save();            
-        
+            
             wsServer.emit('mensaje',{ user, text: mensaje});
         } catch (error){
             console.error('Error al procesar el nuevo mensaje:', error);
@@ -113,8 +107,23 @@ wsServer.on('connection', (clientSocket) => {
         clientSocket.broadcast.emit('user-joined', user)
     })
     
+    /* clientSocket.on('user-login', (user) =>{
+
+    }) */
+
+    /*   FS.DeleteProduct = clientSocket.on('deleteProduct', async (productId) => { 
+           try {
+               const id = parseInt(productId);
+               await productManager.deleteProduct(id);
+               wsServer.emit('productDeleted', id);
+           } catch (error) {
+               console.error('Error al eliminar el producto:', error);
+           }
+       }); */
     
 });
+
+
 
 app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
@@ -132,15 +141,17 @@ app.use('/carts', cartsRouter);
 app.use('/sessions', sessionsRouter);
 
 
+
 app.use(session({
     store: MongoStore.create({
         mongoUrl,
         mongoOption:{
             useNewUrlParser: true,
             useUnifiedTopology: true},
-        ttl: 15,
-    }),
-    secret: "123123asd",
-    resave: false,
-    saveUninitialized: false
-}))
+            ttl: 15,
+        }),
+        secret: "123123asd",
+        resave: false,
+        saveUninitialized: false
+    }))
+    

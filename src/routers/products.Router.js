@@ -12,6 +12,8 @@ const Products = require('../../dao/models/products.model');
 
 router.get('/', async (req, res) => {
     try {
+        const isLoggedIn = ![null, undefined].includes(req.session.user);
+        const user = req.session.user;
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
         const sort = req.query.sort === 'desc' ? -1 : 1;
@@ -52,22 +54,12 @@ router.get('/', async (req, res) => {
         const prevLink = hasPrevPage ? `/products?page=${prevPage}&limit=${limit}&sort=${req.query.sort}&query=${query}&category=${category}&availability=${availability}` : null;
         const nextLink = hasNextPage ? `/products?page=${nextPage}&limit=${limit}&sort=${req.query.sort}&query=${query}&category=${category}&availability=${availability}` : null;
 
-        /* res.json({
-            status: 'success',
-            payload: products,
-            totalPages,
-            prevPage,
-            nextPage,
-            page,
-            hasPrevPage,
-            hasNextPage,
-            prevLink,
-            nextLink
-        }); */
+   
 
         res.render('home', {
             title: 'Lista Productos',
             products,
+            user: user,
             styles: ['style'],
             useWS: false,
             scripts: ['index'],
@@ -78,7 +70,9 @@ router.get('/', async (req, res) => {
             hasPrevPage,
             hasNextPage,
             prevLink,
-            nextLink
+            nextLink,
+            isLoggedIn,
+            isNotLoggedIn: !isLoggedIn
         });
 
 
