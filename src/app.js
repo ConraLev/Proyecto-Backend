@@ -1,22 +1,24 @@
 const express = require('express');
 const app = express();
+const { Server } = require('socket.io');
 const session = require('express-session');
 const productsRouter = require('./routers/products.Router');
 const cartsRouter = require('./routers/carts.Router');
 const viewsRouter = require('./routers/views.Router');
 const sessionsRouter = require('./routers/sessions.Router');
 const handlebars = require('express-handlebars');
-const { Server } = require('socket.io');
 const ProductManager = require('../dao/FileSystem/ProductManager');
 const productManager = new ProductManager();
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
 const Message = require('../dao/models/messages.model');
 const Products = require('../dao/models/products.model');
-const User = require('../dao/models/user.model')
+const User = require('../dao/models/user.model');
 const cookieParser = require('cookie-parser');
 const sessionMiddleware = require('./sessions/mongoStorage');
 const {dbName, mongoUrl} = require('./dbConfig');
+const initilizeStrategy = require('./config/passport.config');
+const passport = require('passport');
 
 
 /* const FileStore = require('session-file-store');*/
@@ -121,7 +123,6 @@ wsServer.on('connection', (clientSocket) => {
 });
 
 
-
 app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/views`);
@@ -129,15 +130,13 @@ app.set('views', `${__dirname}/views`);
 
 app.use(cookieParser())
 app.use(sessionMiddleware)
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+
 app.use('/', viewsRouter);
 app.use('/products', productsRouter);
 app.use('/carts', cartsRouter);
 app.use('/sessions', sessionsRouter);
-
-
 
 app.use(session({
     store: MongoStore.create({
@@ -150,5 +149,8 @@ app.use(session({
         secret: "123123asd",
         resave: false,
         saveUninitialized: false
-    }))
-    
+    }));
+
+initilizeStrategy();
+app.use(passport.initialize());
+app.use(passport.session()); 

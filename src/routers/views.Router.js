@@ -3,7 +3,9 @@ const router = express.Router();
 const { Server } = require('socket.io');
 const Products = require('../../dao/models/products.model');
 const Message = require('../../dao/models/messages.model');
-const User = require('../../dao/models/user.model')
+const User = require('../../dao/models/user.model');
+const { userIsLoggedIn, userIsNotLoggedIn } = require('../middlewares/auth.middleware');
+
 
 
 router.get('/', (req, res) => {
@@ -12,8 +14,19 @@ router.get('/', (req, res) => {
     res.render('index', { title: 'Login', styles: ['loginStyle'], useWS: false, scripts: ['index'], isLoggedIn,
     isNotLoggedIn: !isLoggedIn });
 
-})
+});
 
+router.get('/reset_password', userIsNotLoggedIn, (_, res) => {
+    res.render('resetpass', {
+        title: 'Reset Password'
+    });
+});
+
+router.get('/reset', (req, res) => {
+    res.render('resetpass', {
+        title: 'Reset Password'
+    });
+});
 
 router.get('/login', (req, res, next) => {
     if (req.session && req.session.user) {
@@ -24,10 +37,7 @@ router.get('/login', (req, res, next) => {
     });
 });
 
-router.get('/register', (req, res, next) => {
-    if (req.session && req.session.user) {
-        return res.redirect('/');
-    }
+router.get('/register', userIsNotLoggedIn, (_, res) => {
     res.render('register', {
         title: 'Register'
     });
@@ -46,7 +56,7 @@ router.get('/profile', async (req, res, next) => {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        res.render('profile', {
+        res.render('profile', {                                 
             title: 'My profile',
             user: user
         });
