@@ -17,14 +17,14 @@
     <div class="listaProd" id="productos">
     {{#each products}}
         <div class="listaProductos" id="listaProductos">
-            <h4>ID PRODUCTO: {{id}}</h4>
-            <h4>NOMBRE: {{title}}</h4>
-            <h4>DESCRIPCION: {{description}}</h4>
-            <h4>PRECIO: {{price}}</h4>
-            <h4>IMAGENES: {{thumbnails}}</h4>
-            <h4>CODIGO: {{code}}</h4>
-            <h4>STOCK: {{stock}}</h4>
-            <h4>CATEGORIA: {{category}}</h4>
+            <h4>ID PRODUCTO: </h4><p>{{id}}</p>
+            <h4>NOMBRE: </h4><p>{{title}}</p>
+            <h4>DESCRIPCION: </h4><p>{{description}}</p>
+            <h4>PRECIO: </h4><p>{{price}}</p>
+            <h4>IMAGENES: </h4><p>{{thumbnails}}</p>
+            <h4>CODIGO: </h4><p>{{code}}</p>
+            <h4>STOCK: </h4><p>{{stock}}</p>
+            <h4>CATEGORIA: </h4><p>{{category}}</p>
             <button class="add-to-cart-btn" data-product-id="<%= product._id %>">Agregar al carrito</button>
         </div>
     {{/each}}

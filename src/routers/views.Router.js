@@ -7,7 +7,6 @@ const User = require('../../dao/models/user.model');
 const { userIsLoggedIn, userIsNotLoggedIn } = require('../middlewares/auth.middleware');
 
 
-
 router.get('/', (req, res) => {
     const isLoggedIn = ![null, undefined].includes(req.session.user)
 
@@ -22,20 +21,6 @@ router.get('/reset_password', userIsNotLoggedIn, (_, res) => {
     });
 });
 
-router.get('/reset', (req, res) => {
-    res.render('resetpass', {
-        title: 'Reset Password'
-    });
-});
-
-router.get('/login', (req, res, next) => {
-    if (req.session && req.session.user) {
-        return res.redirect('/');
-    }
-    res.render('login', {
-        title: 'Login'
-    });
-});
 
 router.get('/register', userIsNotLoggedIn, (_, res) => {
     res.render('register', {
@@ -45,8 +30,10 @@ router.get('/register', userIsNotLoggedIn, (_, res) => {
 
 router.get('/profile', async (req, res, next) => {
     try {
+        req.session.user = { _id: req.user._id }
+
         if (!req.session || !req.session.user) {
-            return res.redirect('/login');
+            return res.redirect('/');
         }
 
         const userId = req.session.user._id;
@@ -75,6 +62,15 @@ router.get('/logout', (req, res) => {
         res.redirect('/');
     });
 });
+
+
+router.get('/failregister', (_, res) => {
+    res.send('Error al registrar el usuario')
+})
+
+
+
+
 
 
 router.get('/realtimeproducts', async (_, res) => {

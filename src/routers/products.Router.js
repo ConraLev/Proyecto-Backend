@@ -7,11 +7,13 @@ const mongoose = require('mongoose');
 const Products = require('../../dao/models/products.model');
 
 
+
 //Obtener listado de todos los productos o limitarlo por cantidad
 
 
 router.get('/', async (req, res) => {
     try {
+        
         const isLoggedIn = ![null, undefined].includes(req.session.user);
         const user = req.session.user;
         const limit = parseInt(req.query.limit) || 10;
@@ -83,28 +85,6 @@ router.get('/', async (req, res) => {
 });
 
 
-/* router.get('/', async (req, res) => {
-    try {
-        const limit = req.query.limit;
-        let products = [];
-
-        if (limit) {
-            const parsedLimit = parseInt(limit);
-            if (!isNaN(parsedLimit)) {
-                products = await Products.find().limit(parsedLimit);
-            } else {
-                return res.status(400).json({ error: 'El parámetro de límite debe ser un número válido' });
-            }
-        } else {
-            products = await Products.find().lean();
-        }
-        
-        res.render('home', { title: 'Lista Productos', products, styles: ['style'], useWS: false, scripts: ['index'] });
-    } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).json({ error: 'Error al obtener los productos' });
-    }
-}); */
 
 /* router.get('/products', async (req, res) => {
         try {
