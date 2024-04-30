@@ -10,21 +10,29 @@ const { userIsLoggedIn, userIsNotLoggedIn } = require('../middlewares/auth.middl
 router.get('/', (req, res) => {
     const isLoggedIn = ![null, undefined].includes(req.session.user)
 
-    res.render('index', { title: 'Login', styles: ['loginStyle'], useWS: false, scripts: ['index'], isLoggedIn,
-    isNotLoggedIn: !isLoggedIn });
+    res.render('index', { title: 'Login',
+        styles: ['loginStyle'],
+        useWS: false,
+        scripts: ['index'],
+        isLoggedIn,
+        isNotLoggedIn: !isLoggedIn });
 
 });
 
 router.get('/reset_password', userIsNotLoggedIn, (_, res) => {
     res.render('resetpass', {
-        title: 'Reset Password'
+        title: 'Reset Password',
+        styles: ['resetPassStyle']
+
     });
 });
 
 
 router.get('/register', userIsNotLoggedIn, (_, res) => {
     res.render('register', {
-        title: 'Register'
+        title: 'Register',
+        styles: ['registerStyle'],
+        useWS: false
     });
 });
 

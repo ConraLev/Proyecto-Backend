@@ -1,9 +1,13 @@
 <div>
-    <form action="/sessions/reset_password" method="post" enctype="application/x-www-form-urlencoded">
-        <label>Ingrese correo</label>
-        <input type="text" name="email" id="email">
-        <label>Ingrese nueva contraseña</label>
-        <input type="password" name="password" id="password"> 
-        <button id="btnSub" class="btnSub" type="submit">Cambiar contraseña</button>
+    <form action="/sessions/reset_password" id="formReset" class="formReset" method="post" enctype="application/x-www-form-urlencoded">
+        <h2>RECUPERAR CONTRASEÑA</h2>
+        <input class="formResetInput" type="text" name="email" id="email" placeholder="Ingrese su email">
+        <input class="formResetInput" type="password" name="password" id="password" placeholder="Ingrese nueva contraseña"> 
+        <div id="btnCont">
+            <button id="btnSub" class="btnSub" type="submit">Cambiar contraseña</button>
+            <a href="/">
+                <button class="btnBack" type="button">Volver  atrás</button>
+            </a>
+        </div>
     </form>
 </div>

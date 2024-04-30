@@ -86,17 +86,6 @@ router.get('/', async (req, res) => {
 
 
 
-/* router.get('/products', async (req, res) => {
-        try {
-            const products = await Products.find();
-            res.render('products', { title: 'Lista de Productos', products });
-        } catch (error) {
-            console.error('Error al obtener la lista de productos:', error);
-            res.status(500).json({ status: 'error', message: 'Error al obtener la lista de productos' });
-        }
-}); */
-
-
 
 //Obtener productos por ID
 
@@ -138,16 +127,6 @@ router.post('/', async (req, res) => {
 
         res.status(201).json(savedProduct);
 
-        /* FS ProductManager = try {
-             Carga de productos a traves del Product Manager
-            const { title, description, price, thumbnail, code, stock, category } = req.body; 
-            
-            const newProductId = productManager.newId();
-            await productManager.addProduct(title, description, price, thumbnail, code, stock, category);
-            const newProduct = productManager.getProductById(newProductId);
-            
-            res.status(201).json(newProduct); 
-        }  */
 
     } catch (error) {
         console.error('Error al crear un nuevo producto:', error);
