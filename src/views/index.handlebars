@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div>
     {{#if isNotLoggedIn}}
     <div class="login" id="login">
@@ -26,4 +27,34 @@
         <button type="submit">Logout</button>
     </form>
     {{/if}}
+=======
+<div>
+    {{#if isNotLoggedIn}}
+    <div class="login" id="login">
+        <h1>LOGIN</h1>
+
+       <a href="/sessions/github" id="loginGithub"><i id="logoGithub" class="fa-brands fa-github"></i><br>Login con Github</a>
+        
+        <form class="loginForm" action="/sessions/login" method="post" enctype="application/x-www-form-urlencoded">
+            <input type="email" name="email" id="_email" placeholder="Ingrese Email" /> <br>
+            <input type="password" name="password" id="_pass" placeholder=" Ingrese Password"/><br>
+            <a id="restartPass" href="/reset_password">Restaurar contraseña</a>
+            <div class="btnCont" id="btnCont">
+                <button id="BtnNoLog" class="BtnNoLog" type="submit">Login</button>
+                <a href="/register">
+                    <button id="BtnNoLog" class="BtnNoLog" type="button">Registrarse</button>
+                </a>
+            </div>
+        </form>
+    </div>
+    {{/if}}
+
+    {{#if isLoggedIn}}
+    <a href="/products">Ingresar al Sitio</a>
+    <a href="/profile">Mi Perfil</a>
+    <form action="/logout" method="GET">
+        <button type="submit">Logout</button>
+    </form>
+    {{/if}}
+>>>>>>> 18993a74b582ed4c144252be27fd0f23930ab01f
 </div>
