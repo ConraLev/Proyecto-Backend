@@ -13,18 +13,19 @@ const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
 const Message = require('../dao/models/messages.model');
 const Products = require('../dao/models/products.model');
-const User = require('../dao/models/user.model');
 const cookieParser = require('cookie-parser');
 const sessionMiddleware = require('./sessions/mongoStorage');
 const {dbName, mongoUrl} = require('./dbConfig');
 const initilizeStrategy = require('./config/passport.config');
 const initializeStrategyGit = require('./config/passport-github.config');
 const passport = require('passport');
-/* const FileStore = require('session-file-store');*/
+const config = require('./config');
 
-const httpServer = app.listen(8080, () => {
-    console.log(`Servidor escuchando en http://localhost:8080`);
+
+const httpServer = app.listen(config.PORT, () => {
+    console.log(`Servidor escuchando en http://localhost:${config.PORT}`    );
 });
+
 
 const wsServer = new Server(httpServer);
 

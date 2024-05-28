@@ -1,5 +1,3 @@
-
-
 const MongoStore = require('connect-mongo');
 const session = require('express-session');
 const { dbName, mongoUrl } = require('../dbConfig');
