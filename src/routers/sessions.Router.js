@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const User = require('../../dao/models/user.model');
+const User = require('../dao/models/user.model');
 const { hashPassword, isValidPassword } = require('../utils/hashing');
 const { generateToken, /* verifyToken */ } = require('../utils/jwt')
 
@@ -29,17 +29,11 @@ router.post('/login', async (req, res) => {
                 return res.status(401).json({ error: 'Contraseña Incorrecta'})
             }
 
-            /* req.session.user = { email: user.email, firstName: user.firstName, lastName: user.lastName, _id: user._id.toString(), role: user.role };
-
-            const credentials =  { email: user.email, _id: user._id.toString(), role: user.role };
-            const accessToken = generateToken(credentials)
-            res.redirect('/products');  */
-            
-
             req.session.user = { email: user.email, firstName: user.firstName, lastName: user.lastName, _id: user._id.toString(), role: user.role };
 
             const credentials = { email: user.email, _id: user._id.toString(), role: user.role };
-            const token = generateToken(credentials); // Llamada directa a generateToken
+            const token = generateToken(credentials);
+            /* res.redirect('/products', token); */
             res.json({ token });
 
 

@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { Server } = require('socket.io');
-const Products = require('../../dao/models/products.model');
-const Message = require('../../dao/models/messages.model');
-const User = require('../../dao/models/user.model');
+const Products = require('../dao/models/products.model');
+const Message = require('../dao/models/messages.model');
+const User = require('../dao/models/user.model');
 const { userIsLoggedIn, userIsNotLoggedIn } = require('../middlewares/auth.middleware');
-const { verifyToken } = require('../utils/jwt');
+/* const { verifyToken } = require('../utils/jwt'); */
 
 router.get('/', (req, res) => {
     const isLoggedIn = ![null, undefined].includes(req.session.user)
@@ -41,19 +40,7 @@ router.get('/register', userIsNotLoggedIn, (_, res) => {
 
 router.get('/profile'/* , verifyToken */, async (req, res, next) => {
     try {
-        req.session.user = { _id: req.user._id }
-
-        
-        /* const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({ error: 'Authorization header missing' });
-        }
-        
-        const token = authHeader.split(' ')[1];
-        
-        const { _id } = req.authHeader */
-
-
+    
         if (!req.session || !req.session.user) {
             return res.redirect('/');
         }
@@ -89,9 +76,6 @@ router.get('/logout', (req, res) => {
 router.get('/failregister', (_, res) => {
     res.send('Error al registrar el usuario')
 })
-
-
-
 
 
 

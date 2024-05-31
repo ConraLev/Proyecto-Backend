@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const ProductManager = require('../../dao/FileSystem/ProductManager');
+const ProductManager = require('../dao/FileSystem/ProductManager');
 const productManager = new ProductManager();
-const Products = require('../../dao/models/products.model');
+const Products = require('../dao/models/products.model');
 const { verifyToken } = require('../utils/jwt');
 
 

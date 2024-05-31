@@ -1,4 +1,4 @@
-/* const passport = require('passport');
+const passport = require('passport');
 const { Strategy, ExtractJwt } = require('passport-jwt');
 const { secret } = require('../utils/jwt');
 
@@ -18,4 +18,4 @@ const initilizeStrategy = () => {
             done(err)
         }
     }))
-} */
+}

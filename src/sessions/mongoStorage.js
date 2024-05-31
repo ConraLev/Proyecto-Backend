@@ -1,6 +1,6 @@
 const MongoStore = require('connect-mongo');
 const session = require('express-session');
-const { dbName, mongoUrl } = require('../dbConfig');
+const { dbName, mongoUrl } = require('../config/dbConfig');
 
 const store = MongoStore.create({
     mongoUrl: mongoUrl,

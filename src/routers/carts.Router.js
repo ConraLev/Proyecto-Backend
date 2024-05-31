@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Products = require('../../dao/models/products.model');
-const Carts = require('../../dao/models/carts.model');
+const Products = require('../dao/models/products.model');
+const Carts = require('../dao/models/carts.model');
 
 // Crear un nuevo carrito
 router.post('/', async (req, res) => {

@@ -1,3 +1,18 @@
+const { Command } = require('commander');
+
+const program = new Command();
+
+program
+    .description('Prueba')
+    .option('-m, --mode <mode>', 'Modo de ejecucion', 'prod');
+
+program.parse(process.argv);
+
+const options = program.opts();
+
+process.env.MODE = options.mode;
+
+
 const express = require('express');
 const app = express();
 const { Server } = require('socket.io');
@@ -7,31 +22,24 @@ const cartsRouter = require('./routers/carts.Router');
 const viewsRouter = require('./routers/views.Router');
 const sessionsRouter = require('./routers/sessions.Router');
 const handlebars = require('express-handlebars');
-const ProductManager = require('../dao/FileSystem/ProductManager');
+const ProductManager = require('./dao/FileSystem/ProductManager');
 const productManager = new ProductManager();
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
-const Message = require('../dao/models/messages.model');
-const Products = require('../dao/models/products.model');
+const Message = require('./dao/models/messages.model');
+const Products = require('./dao/models/products.model');
 const cookieParser = require('cookie-parser');
 const sessionMiddleware = require('./sessions/mongoStorage');
-const {dbName, mongoUrl} = require('./dbConfig');
+const {dbName, mongoUrl} = require('./config/dbConfig');
 const initilizeStrategy = require('./config/passport.config');
 const initializeStrategyGit = require('./config/passport-github.config');
 const passport = require('passport');
-const config = require('./config');
-
+const config = require('./config/config');
+const path = require('path');
 
 const httpServer = app.listen(config.PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${config.PORT}`    );
 });
-
-
-const wsServer = new Server(httpServer);
-
-app.set('ws', wsServer);
-app.use(express.static(`${__dirname}/../public`));
-
 mongoose.connect(mongoUrl, { dbName })
     .then(() => {
         console.log('Conexión exitosa a MongoDB');
@@ -40,12 +48,15 @@ mongoose.connect(mongoUrl, { dbName })
         console.error('Error al conectar a MongoDB:', error);
     });
 
+const wsServer = new Server(httpServer);
+
+app.set('ws', wsServer);
+app.use(express.static(`${__dirname}/../public`));
 
 app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
-app.set('views', `${__dirname}/views`);
-    
-    
+app.set('views', path.join(__dirname, '../views'));
+       
 app.use(cookieParser())
 app.use(sessionMiddleware)
 app.use(express.json())
@@ -69,10 +80,10 @@ app.use(session({
             saveUninitialized: false
         }));
         
-        initilizeStrategy();
-        initializeStrategyGit();
-        app.use(passport.initialize());
-        app.use(passport.session()); 
+initilizeStrategy();
+initializeStrategyGit();
+app.use(passport.initialize());
+app.use(passport.session()); 
         
 wsServer.on('connection', (clientSocket) => {
             console.log(`Cliente conectado ID: ${clientSocket.id}`);

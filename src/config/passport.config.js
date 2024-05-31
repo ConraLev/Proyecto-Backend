@@ -1,6 +1,6 @@
 const passport = require('passport');
 const { Strategy } = require('passport-local');
-const User = require('../../dao/models/user.model');
+const User = require('../dao/models/user.model');
 const { hashPassword, isValidPassword } = require('../utils/hashing');
 
 const initilizeStrategy = () => {
@@ -58,6 +58,7 @@ const initilizeStrategy = () => {
                 if(!isValidPassword(password, user.password)){
                     return res.status(401).json({ error: 'Contraseña Incorrecta'})
                 }
+                
     
                 req.session.user = { email: user.email, firstName: user.firstName, lastName: user.lastName, _id: user._id.toString(), role: user.role };
                 res.redirect('/products');

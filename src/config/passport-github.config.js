@@ -1,6 +1,6 @@
 const passport = require('passport');
 const { Strategy } = require('passport-github2');
-const User = require('../../dao/models/user.model');
+const User = require('../dao/models/user.model');
 const { clientID, clientSecret, callbackURL} = require('../config/github.private');
 
 const initializeStrategyGit = () => {
