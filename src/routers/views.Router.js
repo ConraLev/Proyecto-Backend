@@ -1,102 +1,36 @@
 const express = require('express');
 const router = express.Router();
-const Products = require('../dao/models/products.model');
-const Message = require('../dao/models/messages.model');
-const User = require('../dao/models/user.model');
 const { userIsLoggedIn, userIsNotLoggedIn } = require('../middlewares/auth.middleware');
-/* const { verifyToken } = require('../utils/jwt'); */
 
-router.get('/', (req, res) => {
-    const isLoggedIn = ![null, undefined].includes(req.session.user)
+const { ViewsController } = require('../controllers/views.Controller');
+const { ViewsService } = require('../services/views.Service');
+const { ViewsStorage } = require('../persistence/views.Storage');
 
-    res.render('index', { title: 'Login',
-        styles: ['loginStyle'],
-        useWS: false,
-        scripts: ['index'],
-        isLoggedIn,
-        isNotLoggedIn: !isLoggedIn });
+const withController = callback => {
+    return (req, res) => {
+        const service = new ViewsService(new ViewsStorage());
+        const controller = new ViewsController(service);
+        return callback(controller, req, res);
+    };
+};
 
-});
+router.get('/', withController((controller, req, res) => controller.renderHomePage(req, res)));
 
-router.get('/reset_password', userIsNotLoggedIn, (_, res) => {
-    res.render('resetpass', {
-        title: 'Reset Password',
-        styles: ['resetPassStyle']
+router.get('/reset_password', userIsNotLoggedIn, withController((controller, req, res) => controller.renderResetPasswordPage(req, res)));
 
-    });
-});
+router.get('/register', userIsNotLoggedIn, withController((controller, req, res) => controller.renderRegisterPage(req, res)));
 
+router.get('/profile', withController((controller, req, res) => controller.renderProfilePage(req, res)));
 
-router.get('/register', userIsNotLoggedIn, (_, res) => {
-    res.render('register', {
-        title: 'Register',
-        styles: ['registerStyle'],
-        useWS: false
-    });
-});
+router.get('/logout', withController((controller, req, res) => controller.logout(req, res)));
 
+router.get('/failregister', withController((controller, req, res) => controller.failRegister(req, res)));
 
+router.get('/realtimeproducts', withController((controller, req, res) => controller.renderRealtimeProductsPage(req, res)));
 
+router.get('/chat', withController((controller, req, res) => controller.renderChatPage(req, res)));
 
-router.get('/profile'/* , verifyToken */, async (req, res, next) => {
-    try {
-    
-        if (!req.session || !req.session.user) {
-            return res.redirect('/');
-        }
+module.exports = {
+    configure: app => app.use('/', router)
+};
 
-        const userId = req.session.user._id;
-        const user = await User.findById(userId).lean();
-
-        if (!user) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
-        }
-
-        res.render('profile', {                                 
-            title: 'My profile',
-            user: user
-        });
-    } catch (error) {
-        console.error('Error al obtener perfil de usuario:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-});
-
-
-router.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Error al cerrar sesión:', err);
-        }
-        res.redirect('/');
-    });
-});
-
-
-router.get('/failregister', (_, res) => {
-    res.send('Error al registrar el usuario')
-})
-
-
-
-router.get('/realtimeproducts', async (_, res) => {
-    try {
-        const products = await Products.find().lean();
-        res.render('realtimeproducts', { title: 'Lista Actualizacion', products, styles: ['style'], useWS: true, scripts: ['indexRealTime'] });
-    } catch (error) {
-        console.error('Error al obtener los productos en tiempo real:', error);
-        res.status(500).json({ error: 'Error al obtener los productos en tiempo real' });
-    }
-});
-
-router.get('/chat', async (req, res) => {
-    try {
-        const lastMessages = await Message.find().sort({ createdAt: -1 }).limit(10); 
-        res.render('chat', { title: 'Chat', styles: ['style'], useWS: true, useSweetAlert: true, scripts: ['indexChat'], lastMessages });
-    } catch (error) {
-        console.error('Error al obtener los últimos mensajes:', error);
-        res.status(500).json({ error: 'Error al obtener los últimos mensajes del servidor' });
-    }
-});
-
-module.exports = router;

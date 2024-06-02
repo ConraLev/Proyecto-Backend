@@ -1,3 +1,8 @@
+body{
+    font-family: 'Poppins', sans-serif;
+    background: rgb(39,55,77);
+    background: linear-gradient(0deg, rgba(39,55,77,1) 0%, rgba(82,109,130,1) 10%, rgba(157,178,191,1) 30%, rgba(221,230,237,1) 100%);
+}
 
 #productos{
     background-color: rgb(245, 35, 35);
@@ -47,11 +52,6 @@
     background-color: red;
 }
 
-body{
-    font-family: 'Poppins', sans-serif;
-    background: rgb(39,55,77);
-    background: linear-gradient(0deg, rgba(39,55,77,1) 0%, rgba(82,109,130,1) 10%, rgba(157,178,191,1) 30%, rgba(221,230,237,1) 100%);
-}
 
 
 .header{
@@ -74,3 +74,6 @@ body{
     
 }
 
+.pagination{
+    text-align: center;
+}
