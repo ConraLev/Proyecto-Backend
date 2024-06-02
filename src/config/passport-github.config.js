@@ -1,6 +1,7 @@
 const passport = require('passport');
 const { Strategy } = require('passport-github2');
 const User = require('../dao/models/user.model');
+const Cart = require('../dao/models/carts.model');
 const { clientID, clientSecret, callbackURL} = require('../config/github.private');
 
 const initializeStrategyGit = () => {
@@ -30,6 +31,13 @@ const initializeStrategyGit = () => {
 
 
             const result = await User.create(newUser);
+
+            const newCart = new Cart({ userId: result._id, products: [] });
+            await newCart.save();
+
+            result.cartId = newCart._id;
+            await result.save();
+
 
             return done(null, result);
         } catch (error) {

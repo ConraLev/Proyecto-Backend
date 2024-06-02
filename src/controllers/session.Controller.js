@@ -1,4 +1,5 @@
 const User = require('../dao/models/user.model');
+const Cart = require('../dao/models/carts.model');
 const { generateToken } = require('../utils/jwt');
 const { isValidPassword } = require('../utils/hashing');
 const adminUser = { email: 'adminCoder@coder.com', password: 'adminCod3r123', role: 'admin', firstName: 'Admin', lastName: 'Coder' };
@@ -46,7 +47,8 @@ class SessionController {
 
                 const credentials = { email: user.email, _id: user._id.toString(), role: user.role };
                 const token = generateToken(credentials);
-                res.json({ token });
+                /* res.json({ token }); */
+                res.redirect('/products')
 
             } catch (error) {
                 console.error('Error al buscar usuario en la base de datos:', error);
@@ -58,10 +60,16 @@ class SessionController {
     async register(req, res) {
         const { email, firstName, lastName, _id, role } = req.user;
         req.session.user = { email, firstName, lastName, _id: _id.toString(), role };
+        
+        const newCart = new Cart({ userId: _id, items: [] });
+        const savedCart = await newCart.save();
+
+        await User.findByIdAndUpdate(_id, { cartId: savedCart._id });
+        
         res.redirect('/products');
     }
 
-    failRegister(req, res) {
+    failRegister(_, res) {
         res.send('Error al registrar el usuario');
     }
 
