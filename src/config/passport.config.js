@@ -86,7 +86,3 @@ const initilizeStrategy = () => {
 
 module.exports = initilizeStrategy
 
-/* module.exports = {
-    configure: app => app.use((passport.initialize())),
-    configure: app => app.use(passport.session())
-} */

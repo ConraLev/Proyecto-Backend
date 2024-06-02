@@ -24,6 +24,9 @@ class ProductController {
         try {
             const isLoggedIn = ![null, undefined].includes(req.session.user);
             const user = req.session.user;
+
+            const cartId = req.session.cartId;
+
             const limit = parseInt(req.query.limit) || 10;
             const page = parseInt(req.query.page) || 1;
             const sort = req.query.sort === 'desc' ? -1 : 1;
@@ -68,6 +71,7 @@ class ProductController {
                 title: 'Lista Productos',
                 products,
                 user: user,
+                cartId: user.cartId,
                 styles: ['style'],
                 useWS: false,
                 scripts: ['index'],

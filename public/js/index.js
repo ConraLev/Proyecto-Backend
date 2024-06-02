@@ -5,31 +5,39 @@ socket.on('connect', () => {
 });
 
 socket.on('updateProducts', (products) => {
+    document.addEventListener('DOMContentLoaded', () => {
+
     const productosContainer = document.getElementById('productos');
     productosContainer.innerHTML = ''; 
 
     products.forEach(product => {
-        console.log(product)
         const productoElement = document.createElement('div');
         productoElement.classList.add('listaProductos');
         productoElement.innerHTML = `
-            <h4>ID PRODUCTO: ${{id: id}}</h4>
-            <h4>NOMBRE: ${{title: title}}</h4>
-            <h4>DESCRIPCION: ${{description: description}}</h4>
-            <h4>PRECIO: ${price}</h4>
-            <h4>IMAGENES: ${thumbnails}</h4>
-            <h4>CODIGO: ${code}</h4>
-            <h4>STOCK: ${stock}</h4>
-            <h4>CATEGORIA: ${category}</h4>
-        <button class="add-to-cart-btn" /* data-product-id="<%= product._id %>" */> Agregar al carrito </button>`
+            <h4>ID PRODUCTO: ${product._id}</h4>
+            <h4>NOMBRE: ${product.title}</h4>
+            <h4>DESCRIPCION: ${product.description}</h4>
+            <h4>PRECIO: ${product.price}</h4>
+            <h4>IMAGENES: ${product.thumbnails}</h4>
+            <h4>CODIGO: ${product.code}</h4>
+            <h4>STOCK: ${product.stock}</h4>
+            <h4>CATEGORIA: ${product.category}</h4>
+            <button class="add-to-cart-btn" data-product-id="${product._id}">Agregar al carrito</button>
+        `;
         productosContainer.appendChild(productoElement);
     });
 
-    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+
+    const cartId = document.getElementById('cartId').value;
+    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn'); 
+
+    console.log('Add to Cart Buttons:', addToCartButtons); 
+
     addToCartButtons.forEach(button => {
         button.addEventListener('click', async (event) => {
+            console.log('Button clicked'); 
             const productId = event.target.getAttribute('data-product-id');
-            const cartId = 'your_cart_id_here'; // You should have a way to get the current user's cart ID.
+
             try {
                 const response = await fetch(`/carts/${cartId}/item`, {
                     method: 'POST',
@@ -46,38 +54,10 @@ socket.on('updateProducts', (products) => {
         });
     });
 
-
+});
 });
 
 socket.on('productsUpdateError', (errorMessage) => {
     console.error('Error al obtener los productos:', errorMessage);
-
 });
-
-/* document.addEventListener('DOMContentLoaded', () => {
-    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', async () => {
-            const productId = button.dataset.productId;
-            try {
-                const response = await fetch(`/carts/${cartId}/products/${productId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const data = await response.json();
-                console.log(data);
-            } catch (error) {
-                console.error('Error al agregar al carrito:', error);
-            }
-        });
-    });
-} */
-
-
-
-
-
 

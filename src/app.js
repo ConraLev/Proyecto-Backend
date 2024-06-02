@@ -10,7 +10,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const initilizeStrategy = require('./config/passport.config');
 const initializeStrategyGit = require('./config/passport-github.config');
-const initializeWsServer = require('./routers/wsServer');
+const initializeWsServer = require('./routers/wsServer.Router');
 const sessionMiddleware = require('./sessions/mongoStorage');
 
 app.use(cookieParser())

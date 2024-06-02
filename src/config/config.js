@@ -4,8 +4,6 @@ const options = require('./commander');
 
 const mode = options.mode || 'prod';
 
-/* const mode = process.env.MODE || 'prod'; */
-
 dotenv.config({
     path: mode === 'prod' ? path.resolve(__dirname, '.prod.env') : path.resolve(__dirname, '.dev.env')
 });

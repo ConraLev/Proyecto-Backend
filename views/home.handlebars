@@ -11,6 +11,8 @@
     {{/if}}
 </div>
 
+<input type="hidden" id="cartId" value="{{cartId}}"> 
+
 <div id="prodMasChat" class="prodMasChat">
     <div class="listaProd" id="productos">
     {{#each products}}
@@ -23,7 +25,7 @@
             <h4>CODIGO: </h4><p>{{code}}</p>
             <h4>STOCK: </h4><p>{{stock}}</p>
             <h4>CATEGORIA: </h4><p>{{category}}</p>
-            <button class="add-to-cart-btn" data-product-id="{{id}}">Agregar al carrito</button>
+            <button class="add-to-cart-btn" data-product-id="{{_id}}">Agregar al carrito</button>
         </div>
     {{/each}}
 
@@ -37,8 +39,10 @@
                 <button id="BtnSig" class="BtnSig" type="button">Siguiente</button></a>
         {{/if}}
     </div>
-
-
     </div>
 </div>
+
+<script>
+    const cartId = '{{cartId}}'; 
+</script>
 
