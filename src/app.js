@@ -1,52 +1,74 @@
 const express = require('express');
-const app = express();
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
-
 const handlebars = require('express-handlebars');
 const passport = require('passport');
-const config = require('./config/config');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const initilizeStrategy = require('./config/passport.config');
+const config = require('./config/config');
+const initializeStrategy = require('./config/passport.config');
 const initializeStrategyGit = require('./config/passport-github.config');
 const initializeWsServer = require('./routers/wsServer.Router');
 const sessionMiddleware = require('./sessions/mongoStorage');
 
-app.use(cookieParser())
-app.use(sessionMiddleware)
+const { createDAO: createProductDAO } = require('./dao/products');
+const { createDAO: createCartDAO } = require('./dao/carts');
+const { createDAO: createSessionDAO } = require('./dao/sessions');
+const { ProductService } = require('./services/Product.Service');
+const { CartService } = require('./services/Cart.Service');
+const { SessionService } = require('./services/session.Service')
+const { ProductController } = require('./controllers/Product.Controller');
+const { CartController } = require('./controllers/Cart.Controller');
+const { SessionController } = require('./controllers/Session.Controller');
 
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(sessionMiddleware);
 
 const httpServer = app.listen(config.PORT, () => {
-    console.log(`Servidor escuchando en http://localhost:${config.PORT}`    );
+    console.log(`Servidor escuchando en http://localhost:${config.PORT}`);
 });
 
 const wsServer = initializeWsServer(httpServer);
-
 app.set('ws', wsServer);
-app.use(express.static(`${__dirname}/../public`));
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, '../views'));
-       
-        
-initilizeStrategy();
+
+initializeStrategy();
 initializeStrategyGit();
 app.use(passport.initialize());
-app.use(passport.session()); 
-        
+app.use(passport.session());
 
-const routes = [
-    require('./routers/products.Router'),
-    require('./routers/carts.Router'),
-    require('./routers/views.Router'),
-    require('./routers/sessions.Router')
-];
+(async () => {
+    const productDAO = await createProductDAO();
+    const productService = new ProductService(productDAO);
+    const productController = new ProductController(productService);
 
-for (const route of routes){
-    route.configure(app)
-}
+    const cartDAO = await createCartDAO();
+    const cartService = new CartService(cartDAO);
+    const cartController = new CartController(cartService);
 
+    const sessionDAO = await createSessionDAO('mongo');
+    const sessionService = new SessionService(sessionDAO);
+    const sessionController = new SessionController(sessionService);
+
+    app.set('productController', productController);
+    app.set('cartController', cartController);
+    app.set('sessionController', sessionController);
+
+    const routes = [
+        require('./routers/products.Router'),
+        require('./routers/carts.Router'),
+        require('./routers/views.Router'),
+        require('./routers/sessions.Router')
+    ];
+
+    for (const route of routes) {
+        route.configure(app);
+    }
+})();
 
 module.exports = app;

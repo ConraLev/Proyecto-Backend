@@ -2,7 +2,7 @@ const { hashPassword } = require('../utils/hashing');
 
 class SessionService {
 
-    constructor(storage){
+    constructor(storage) {
         this.storage = storage;
     }
 

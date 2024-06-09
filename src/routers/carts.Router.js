@@ -1,28 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
-const { CartController } = require('../controllers/cart.Controller');
-const { CartService } = require('../services/cart.Service');
-const { CartStorage } = require('../persistence/cart.Storage');
+const configure = (app) => {
+    const cartController = app.get('cartController');
 
-const withController = callback => {
-    return (req, res) => {
-        const service = new CartService(new CartStorage());
-        const controller = new CartController(service);
-        return callback(controller, req, res);
-    };
+    if (!cartController) {
+        throw new Error('CartController is not defined');
+    }
+
+    router.get('/:id', cartController.getCartById.bind(cartController));
+    router.post('/:cartId/item', cartController.addItemToCart.bind(cartController));
+    router.delete('/:cartId/item/:productId', cartController.removeItemFromCart.bind(cartController));
+    router.delete('/:cartId', cartController.clearCart.bind(cartController));
+
+    app.use('/carts', router);
 };
 
-router.get('/:id', withController((controller, req, res) => controller.getCartById(req, res)));
-
-router.post('/:cartId/item', withController((controller, req, res) => controller.addItemToCart(req, res)));
-
-router.delete('/:cartId/item/:productId', withController((controller, req, res) => controller.removeItemFromCart(req, res)));
-
-router.delete('/:cartId', withController((controller, req, res) => controller.clearCart(req, res)));
-
-module.exports = {
-    configure: app => app.use('/carts', router)
-};
-
+module.exports = { configure };
 
