@@ -1,9 +1,9 @@
-const { MongoDAO: ContactDAO } = require('./mongo')
+const { MongoDAO: ProductDAO } = require('./mongo');
 
 const createDAO = async () => {
-    const dao = new ContactDAO()
-    await dao.init()
-    return dao
-}
+    const dao = new ProductDAO();
+    await dao.init();
+    return dao;
+};
 
-module.exports = { createDAO }
+module.exports = { createDAO };

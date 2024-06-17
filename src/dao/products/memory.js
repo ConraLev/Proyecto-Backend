@@ -18,8 +18,7 @@ class MemoryDAO {
     }
 
     async createOne(product) {
-        const newProduct = { ...product, _id: (this.products.length + 1).toString() }; // Ensure ID is a string
-        this.products.push(newProduct);
+        const newProduct = { ...product, _id: (this.products.length + 1).toString() }; 
         return newProduct;
     }
 

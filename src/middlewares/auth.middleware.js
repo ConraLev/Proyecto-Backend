@@ -16,5 +16,24 @@ module.exports = {
         }
 
         next()
+    },
+
+    userIsAdmin: (req, res, next) => {
+        if (req.user && req.user.role === 'admin') {
+            return next();
+        }
+        return res.status(403).send('Forbidden');
+    },
+    
+    userIsUser: (req, res, next) => {
+        if (req.user && req.user.role === 'user') {
+            return next();
+        }
+        return res.status(403).send('Forbidden');
     }
+
 }
+
+
+
+

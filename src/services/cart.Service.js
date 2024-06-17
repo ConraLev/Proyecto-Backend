@@ -1,31 +1,36 @@
 class CartService {
-    constructor(storage) {
-        this.storage = storage;
+    constructor(cartDao) {
+        this.cartDao = cartDao;
     }
 
-    getCartById(cartId) {
-        return this.storage.getCartById(cartId);
+    async getCartById(cartId) {
+        return await this.cartDao.getCartById(cartId);
     }
 
-    addItemToCart(cartId, productId, quantity) {
-        if (!cartId || !productId || !quantity) {
-            throw new Error('invalid parameters');
-        }
-        return this.storage.addItemToCart(cartId, productId, quantity);
+    async addItemToCart(cartId, productId, quantity) {
+        return await this.cartDao.addItemToCart(cartId, productId, quantity);
     }
 
-    removeItemFromCart(cartId, productId) {
-        if (!cartId || !productId) {
-            throw new Error('invalid parameters');
-        }
-        return this.storage.removeItemFromCart(cartId, productId);
+    async removeItemFromCart(cartId, productId) {
+        return await this.cartDao.removeItemFromCart(cartId, productId);
     }
 
-    clearCart(cartId) {
-        if (!cartId) {
-            throw new Error('invalid parameters');
-        }
-        return this.storage.clearCart(cartId);
+    async clearCart(cartId) {
+        return await this.cartDao.clearCart(cartId);
+    }
+
+    async purchase(cartId, userId) {
+        const cart = await this.cartDao.getCartById(cartId);
+        if (!cart) throw new Error('Carrito no encontrado');
+
+        const products = cart.items.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity
+        }));
+
+        const amount = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
+
+        return { products, amount };
     }
 }
 

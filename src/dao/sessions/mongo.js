@@ -7,6 +7,10 @@ class MongoDAO {
         await mongoose.connect(mongoUrl, { dbName });
     }
 
+    async getAll() {
+        return UserModel.find({});
+    }
+
     async findUserByEmail(email) {
         return UserModel.findOne({ email });
     }
@@ -28,4 +32,4 @@ class MongoDAO {
     }
 }
 
-module.exports = { MongoDAO };
+module.exports = MongoDAO;
