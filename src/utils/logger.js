@@ -1,6 +1,8 @@
 const { createLogger, transports, format } = require('winston');
 const path = require('path');
 
+const env = process.env.NODE_ENV || 'development';
+
 // Definir niveles de logging
 const levels = {
     debug: 0,
@@ -10,23 +12,23 @@ const levels = {
     fatal: 4
 };
 
-// Configuración del logger
+// Formato para los logs
+const logFormat = format.combine(
+    format.timestamp(),
+    format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+);
+
 const logger = createLogger({
     levels: levels,
-    format: format.combine(
-        format.timestamp(),
-        format.json()
-    ),
+    format: logFormat,
     transports: [
-        // Consola para desarrollo (debug en adelante)
         new transports.Console({
-            level: 'debug',
+            level: env === 'dev' ? 'debug' : 'warn',
             format: format.combine(
                 format.colorize(),
                 format.simple()
             )
         }),
-        // Archivo para errores (error en adelante)
         new transports.File({
             filename: path.join(__dirname, '../logs/errors.log'),
             level: 'error'
@@ -34,5 +36,11 @@ const logger = createLogger({
     ]
 });
 
+if (env === 'prod') {
+    logger.add(new transports.File({
+        filename: path.join(__dirname, '../logs/combined.log'),
+        level: 'info'
+    }));
+}
 
 module.exports = logger;
