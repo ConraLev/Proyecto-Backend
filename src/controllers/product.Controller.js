@@ -3,15 +3,14 @@ const { validateProduct } = require('../test/product.validator');
 const { createError } = require('../services/errors/errorHandler');
 const { CustomError } = require('../services/errors/customError');
 const { ErrorCodes } = require('../services/errors/errorCodes');
-
+const logger = require('../utils/logger'); 
 
 class ProductController {
     constructor(ProductService) {
         this.service = ProductService;
     }
 
-
-    async getAll(req, res) {
+    async getAll(req, res, next) {
         try {
             const isLoggedIn = ![null, undefined].includes(req.session.user);
             const user = req.session.user;
@@ -75,6 +74,7 @@ class ProductController {
                 isNotLoggedIn: !isLoggedIn
             });
         } catch (error) {
+            logger.error(`Error en getAll: ${error.message}`);
             next(error);
         }
     }
@@ -83,16 +83,19 @@ class ProductController {
         const productId = req.params.id;
 
         if (!mongoose.Types.ObjectId.isValid(productId)) {
+            logger.warn(`ID de producto inválido recibido: ${productId}`);
             return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
         }
 
         try {
             const product = await this.service.getById(productId);
             if (!product) {
+                logger.warn(`Producto no encontrado para ID: ${productId}`);
                 return next(new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado'));
             }
             res.json(product);
         } catch (error) {
+            logger.error(`Error en getById: ${error.message}`);
             next(error);
         }
     }
@@ -101,6 +104,7 @@ class ProductController {
         const productId = req.params.id;
 
         if (!mongoose.Types.ObjectId.isValid(productId)) {
+            logger.warn(`ID de producto inválido recibido: ${productId}`);
             return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
         }
 
@@ -108,6 +112,7 @@ class ProductController {
             await this.service.deleteById(productId);
             res.json({ message: `Producto con ID ${productId} eliminado correctamente` });
         } catch (error) {
+            logger.error(`Error en deleteById: ${error.message}`);
             next(error);
         }
     }
@@ -119,12 +124,14 @@ class ProductController {
             const validationErrors = validateProduct({ title, description, price, thumbnail, code, stock, category });
 
             if (validationErrors.length > 0) {
+                logger.warn(`Validación fallida al crear producto: ${validationErrors}`);
                 throw createError('MISSING_REQUIRED_FIELDS', validationErrors);
             }
 
             const producto = await this.service.createOne({ title, description, price, thumbnail, code, stock, category });
             res.json(producto);
         } catch (error) {
+            logger.error(`Error en createOne: ${error.message}`);
             next(error);
         }
     }
@@ -134,6 +141,7 @@ class ProductController {
         const updatedFields = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(productId)) {
+            logger.warn(`ID de producto inválido recibido: ${productId}`);
             return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
         }
 
@@ -141,11 +149,13 @@ class ProductController {
             const updatedProduct = await this.service.updateById(productId, updatedFields);
 
             if (!updatedProduct) {
+                logger.warn(`Producto no encontrado para ID: ${productId}`);
                 return next(new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado'));
             }
 
             res.json(updatedProduct);
         } catch (error) {
+            logger.error(`Error en updateOne: ${error.message}`);
             next(error);
         }
     }

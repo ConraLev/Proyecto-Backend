@@ -4,12 +4,12 @@ const generateMockProducts = (count = 100) => {
     let products = [];
     for (let i = 0; i < count; i++) {
         products.push({
-            _id: faker.datatype.uuid(),
+            _id: faker.string.uuid(),
             name: faker.commerce.productName(),
             price: faker.commerce.price(),
             description: faker.commerce.productDescription(),
             category: faker.commerce.department(),
-            image: faker.image.imageUrl()
+            image: faker.image.url()
         });
     }
     return products;

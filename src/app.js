@@ -8,6 +8,7 @@ const initializeStrategy = require('./config/passport.config');
 const initializeStrategyGit = require('./config/passport-github.config');
 const initializeWsServer = require('./routers/wsServer.Router');
 const sessionMiddleware = require('./sessions/mongoStorage');
+const logger = require('./utils/logger');
 
 const { errorHandler } = require('./services/errors/errorHandler');
 const { createDAO: createProductDAO } = require('./dao/products');
@@ -23,21 +24,25 @@ const { CartController } = require('./controllers/Cart.Controller');
 const { SessionController } = require('./controllers/Session.Controller');
 const { ViewsController } = require('./controllers/Views.Controller');
 
-
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(sessionMiddleware);
+app.use(errorHandler);
 
-const httpServer = app.listen(config.PORT, () => {
-    console.log(`Servidor escuchando en http://localhost:${config.PORT}`);
+
+const httpServer = app.listen(config.PORT, (err) => {
+    if (err) {
+        logger.error(`Error al iniciar el servidor: ${err.message}`);
+        return;
+    }
+    logger.info(`Servidor escuchando en http://localhost:${config.PORT}`);
 });
 
 const wsServer = initializeWsServer(httpServer);
 app.set('ws', wsServer);
 app.use(express.static(path.join(__dirname, '../public')));
-app.use(errorHandler);
 
 app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
