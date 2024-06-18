@@ -1,19 +1,15 @@
 const mongoose = require('mongoose');
 const { validateProduct } = require('../test/product.validator');
-const { createError } = require('../test/errorHandler');
+const { createError } = require('../services/errors/errorHandler');
+const { CustomError } = require('../services/errors/customError');
+const { ErrorCodes } = require('../services/errors/errorCodes');
+
 
 class ProductController {
     constructor(ProductService) {
         this.service = ProductService;
     }
 
-    #handleError(res, err) {
-        if (err instanceof CustomError) {
-            return res.status(err.code).json({ error: err.message, details: err.details });
-        }
-
-        return res.status(500).json({ error: err.message });
-    }
 
     async getAll(req, res) {
         try {
@@ -79,81 +75,78 @@ class ProductController {
                 isNotLoggedIn: !isLoggedIn
             });
         } catch (error) {
-            return this.#handleError(res, error);
+            next(error);
         }
     }
 
-    async getById(req, res) {
+    async getById(req, res, next) {
         const productId = req.params.id;
 
         if (!mongoose.Types.ObjectId.isValid(productId)) {
-            return res.status(400).json({ error: 'Invalid product ID' });
+            return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
         }
 
         try {
             const product = await this.service.getById(productId);
             if (!product) {
-                res.status(404).json({ error: 'Producto no encontrado' });
-            } else {
-                res.json(product);
+                return next(new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado'));
             }
+            res.json(product);
         } catch (error) {
-            return this.#handleError(res, error);
+            next(error);
         }
     }
 
-    async deleteById(req, res) {
+    async deleteById(req, res, next) {
         const productId = req.params.id;
 
         if (!mongoose.Types.ObjectId.isValid(productId)) {
-            return res.status(400).json({ error: 'Invalid product ID' });
+            return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
         }
 
         try {
             await this.service.deleteById(productId);
             res.json({ message: `Producto con ID ${productId} eliminado correctamente` });
         } catch (error) {
-            return this.#handleError(res, error);
+            next(error);
         }
     }
 
-    async createOne(req, res) {
+    async createOne(req, res, next) {
         const { title, description, price, thumbnail, code, stock, category } = req.body;
 
         try {
-            
             const validationErrors = validateProduct({ title, description, price, thumbnail, code, stock, category });
 
             if (validationErrors.length > 0) {
-                return this.#handleError(res, createError('MISSING_REQUIRED_FIELDS', validationErrors));
+                throw createError('MISSING_REQUIRED_FIELDS', validationErrors);
             }
 
-
-            const producto = await this.service.createOne(title, description, price, thumbnail, code, stock, category);
-            return res.json(producto);
+            const producto = await this.service.createOne({ title, description, price, thumbnail, code, stock, category });
+            res.json(producto);
         } catch (error) {
-            return this.#handleError(res, error);
+            next(error);
         }
     }
 
-    async updateOne(req, res) {
+    async updateOne(req, res, next) {
         const productId = req.params.id;
         const updatedFields = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(productId)) {
-            return res.status(400).json({ error: 'Invalid product ID' });
+            return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
         }
 
         try {
             const updatedProduct = await this.service.updateById(productId, updatedFields);
 
             if (!updatedProduct) {
-                return res.status(404).json({ error: 'Producto no encontrado' });
+                return next(new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado'));
             }
 
             res.json(updatedProduct);
         } catch (error) {
-            return this.#handleError(res, error);
+            next(error);
         }
     }
 }

@@ -1,41 +1,54 @@
+const { createError } = require('../services/errors/errorHandler');
+
 class ViewsController {
     constructor(ViewsService) {
         this.service = ViewsService;
     }
 
-    #handleError(res, err) {
-        return res.status(500).json({ error: err.message });
+    async renderHomePage(req, res, next) {
+        try {
+            const isLoggedIn = ![null, undefined].includes(req.session.user);
+
+            res.render('index', {
+                title: 'Login',
+                styles: ['loginStyle'],
+                useWS: false,
+                scripts: ['index'],
+                isLoggedIn,
+                isNotLoggedIn: !isLoggedIn
+            });
+        } catch (error) {
+            console.error('Error al renderizar la página de inicio:', error);
+            next(error);
+        }
     }
 
-    async renderHomePage(req, res) {
-        const isLoggedIn = ![null, undefined].includes(req.session.user);
-
-        res.render('index', {
-            title: 'Login',
-            styles: ['loginStyle'],
-            useWS: false,
-            scripts: ['index'],
-            isLoggedIn,
-            isNotLoggedIn: !isLoggedIn
-        });
+    async renderResetPasswordPage(req, res, next) {
+        try {
+            res.render('resetpass', {
+                title: 'Reset Password',
+                styles: ['resetPassStyle']
+            });
+        } catch (error) {
+            console.error('Error al renderizar la página de reseteo de contraseña:', error);
+            next(error);
+        }
     }
 
-    async renderResetPasswordPage(req, res) {
-        res.render('resetpass', {
-            title: 'Reset Password',
-            styles: ['resetPassStyle']
-        });
+    async renderRegisterPage(req, res, next) {
+        try {
+            res.render('register', {
+                title: 'Register',
+                styles: ['registerStyle'],
+                useWS: false
+            });
+        } catch (error) {
+            console.error('Error al renderizar la página de registro:', error);
+            next(error);
+        }
     }
 
-    async renderRegisterPage(req, res) {
-        res.render('register', {
-            title: 'Register',
-            styles: ['registerStyle'],
-            useWS: false
-        });
-    }
-
-    async renderProfilePage(req, res) {
+    async renderProfilePage(req, res, next) {
         try {
             if (!req.session || !req.session.user) {
                 return res.redirect('/');
@@ -45,7 +58,7 @@ class ViewsController {
             const user = await this.service.findUserById(userId);
 
             if (!user) {
-                return res.status(404).json({ error: 'Usuario no encontrado' });
+                throw createError('USER_NOT_FOUND');
             }
 
             res.render('profile', {
@@ -53,8 +66,8 @@ class ViewsController {
                 user: user
             });
         } catch (error) {
-            console.error('Error al obtener perfil de usuario:', error);
-            this.#handleError(res, error);
+            console.error('Error al obtener y renderizar el perfil de usuario:', error);
+            next(error);
         }
     }
 
@@ -71,7 +84,7 @@ class ViewsController {
         res.send('Error al registrar el usuario');
     }
 
-    async renderRealtimeProductsPage(_, res) {
+    async renderRealtimeProductsPage(_, res, next) {
         try {
             const products = await this.service.findAllProducts();
             res.render('realtimeproducts', {
@@ -82,12 +95,12 @@ class ViewsController {
                 scripts: ['indexRealTime']
             });
         } catch (error) {
-            console.error('Error al obtener los productos en tiempo real:', error);
-            this.#handleError(res, error);
+            console.error('Error al obtener y renderizar los productos en tiempo real:', error);
+            next(error);
         }
     }
 
-    async renderChatPage(req, res) {
+    async renderChatPage(req, res, next) {
         try {
             const lastMessages = await this.service.findLastMessages();
             res.render('chat', {
@@ -99,8 +112,8 @@ class ViewsController {
                 lastMessages
             });
         } catch (error) {
-            console.error('Error al obtener los últimos mensajes:', error);
-            this.#handleError(res, error);
+            console.error('Error al obtener y renderizar los últimos mensajes del chat:', error);
+            next(error);
         }
     }
 }

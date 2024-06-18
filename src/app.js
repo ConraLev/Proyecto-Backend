@@ -9,7 +9,7 @@ const initializeStrategyGit = require('./config/passport-github.config');
 const initializeWsServer = require('./routers/wsServer.Router');
 const sessionMiddleware = require('./sessions/mongoStorage');
 
-const { errorHandler } = require('./test/errorHandler');
+const { errorHandler } = require('./services/errors/errorHandler');
 const { createDAO: createProductDAO } = require('./dao/products');
 const { createDAO: createCartDAO } = require('./dao/carts');
 const { createDAO: createSessionDAO } = require('./dao/sessions');

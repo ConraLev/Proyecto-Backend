@@ -2,6 +2,8 @@ const User = require('../dao/models/user.model');
 const Cart = require('../dao/models/carts.model');
 const { generateToken } = require('../utils/jwt');
 const { isValidPassword } = require('../utils/hashing');
+const { createError, errorHandler } = require('../services/errors/errorHandler');
+
 const adminUser = { email: 'adminCoder@coder.com', password: 'adminCod3r123', role: 'admin', firstName: 'Admin', lastName: 'Coder' };
 
 class SessionController {
@@ -10,19 +12,7 @@ class SessionController {
         this.service = SessionService;
     }
 
-    #handleError(res, err) {
-        if (err.message === 'not found') {
-            return res.status(404).json({ error: 'Not found' });
-        }
-
-        if (err.message === 'invalid parameters') {
-            return res.status(400).json({ error: 'Invalid parameters' });
-        }
-
-        return res.status(500).json({ error: err.message });
-    }
-
-    async login(req, res) {
+    async login(req, res, next) {
         const { email, password } = req.body;
 
         if (!email || !password) {
@@ -36,57 +26,75 @@ class SessionController {
             try {
                 const user = await this.service.findUserByEmail(email);
                 if (!user) {
-                    return res.status(401).json({ error: 'Credenciales inválidas' });
+                    throw createError('INVALID_CREDENTIALS');
                 }
 
                 if (!isValidPassword(password, user.password)) {
-                    return res.status(401).json({ error: 'Contraseña Incorrecta' });
+                    throw createError('INVALID_PASSWORD');
                 }
 
-                req.session.user = { email: user.email, firstName: user.firstName, lastName: user.lastName, _id: user._id.toString(), role: user.role };
+                req.session.user = {
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    _id: user._id.toString(),
+                    role: user.role
+                };
 
-                const credentials = { email: user.email, _id: user._id.toString(), role: user.role };
+                const credentials = {
+                    email: user.email,
+                    _id: user._id.toString(),
+                    role: user.role
+                };
                 const token = generateToken(credentials);
-                /* res.json({ token }); */
-                res.redirect('/products')
-
+                res.redirect('/products');
             } catch (error) {
                 console.error('Error al buscar usuario en la base de datos:', error);
-                this.#handleError(res, error);
+                next(error);
             }
         }
     }
 
-    async register(req, res) {
+
+    async register(req, res, next) {
         const { email, firstName, lastName, _id, role } = req.user;
         req.session.user = { email, firstName, lastName, _id: _id.toString(), role };
-        
-        const newCart = new Cart({ userId: _id, items: [] });
-        const savedCart = await newCart.save();
 
-        await User.findByIdAndUpdate(_id, { cartId: savedCart._id });
-        
-        res.redirect('/products');
+        try {
+            const newCart = new Cart({ userId: _id, items: [] });
+            const savedCart = await newCart.save();
+
+            await User.findByIdAndUpdate(_id, { cartId: savedCart._id });
+            res.redirect('/products');
+        } catch (error) {
+            console.error('Error al registrar usuario y/o carrito:', error);
+            next(error);
+        }
     }
 
     failRegister(_, res) {
         res.send('Error al registrar el usuario');
     }
 
-    async githubCallback(req, res) {
-        req.session.user = {
-            email: req.user.email,
-            firstName: req.user.firstName,
-            lastName: req.user.lastName,
-            _id: req.user._id.toString(),
-            role: req.user.role
-        };
-        res.redirect('/products');
+    async githubCallback(req, res, next) {
+        try {
+            req.session.user = {
+                email: req.user.email,
+                firstName: req.user.firstName,
+                lastName: req.user.lastName,
+                _id: req.user._id.toString(),
+                role: req.user.role
+            };
+            res.redirect('/products');
+        } catch (error) {
+            console.error('Error en el callback de GitHub:', error);
+            next(error);
+        }
     }
 
-    async resetPassword(req, res) {
+    async resetPassword(req, res, next) {
         const { email, password } = req.body;
-    
+
         if (!email || !password) {
             return res.status(400).json({ error: 'Datos inválidos' });
         }
@@ -94,14 +102,14 @@ class SessionController {
         try {
             const user = await this.service.findUserByEmail(email);
             if (!user) {
-                return res.status(400).json({ error: 'Credenciales inválidas' });
+                throw createError('INVALID_CREDENTIALS');
             }
 
             await this.service.updateUserPassword(email, password);
             res.redirect('/');
         } catch (error) {
             console.error('Error al buscar usuario en la base de datos:', error);
-            this.#handleError(res, error);
+            next(error);
         }
     }
 }
