@@ -21,8 +21,8 @@ const { SessionService } = require('./services/Session.Service');
 const { ViewsService } = require('./services/Views.Service');
 const { ProductController } = require('./controllers/Product.Controller');
 const { CartController } = require('./controllers/Cart.Controller');
-const { SessionController } = require('./controllers/Session.Controller');
-const { ViewsController } = require('./controllers/Views.Controller');
+const { SessionController } = require('./controllers/session.Controller');
+const { ViewsController } = require('./controllers/views.Controller');
 
 const app = express();
 app.use(express.json());

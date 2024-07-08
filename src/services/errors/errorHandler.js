@@ -11,12 +11,14 @@ const errorDictionary = {
     CART_NOT_FOUND: { code: 404, message: 'Carro no encontrado' },
     INVALID_PRODUCT_DATA: { code: 400, message: 'Dato ingresado invalido' },
     MISSING_REQUIRED_FIELDS: { code: 400, message: 'No se completo todos los campos' },
+    INVALID_CREDENTIALS: {code: 400, message: 'Credencial invalida'},
+    INVALID_PASSWORD: {code: 400, message: 'Contraseña incorrecta'}
 };
 
 const createError = (type, details) => {
     const error = errorDictionary[type];
     if (error) {
-        return new CustomError(error.code, error.message, details);
+        return new CustomError(error.code, error.message ,  details);
     }
     return new CustomError(500, 'Internal Server Error');
 };
@@ -38,8 +40,10 @@ const errorHandler = (err, req, res, next) => {
     });
 };
 
+CustomError,
 module.exports = {
-    CustomError,
     createError,
     errorHandler,
 };
+
+

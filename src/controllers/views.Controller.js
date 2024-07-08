@@ -24,16 +24,28 @@ class ViewsController {
     }
 
     async renderResetPasswordPage(req, res, next) {
+        const { token } = req.query;
+    
         try {
-            res.render('resetpass', {
+            if (!token) {
+                return res.render('resetpassreq', {
+                    title: 'Reset Password',
+                    styles: ['resetPassStyle']
+                });
+            }
+    
+            return res.render('resetpassres', {
                 title: 'Reset Password',
-                styles: ['resetPassStyle']
+                styles: ['resetPassStyle'],
+                token: token
             });
         } catch (error) {
             console.error('Error al renderizar la página de reseteo de contraseña:', error);
             next(error);
         }
     }
+        
+    
 
     async renderRegisterPage(req, res, next) {
         try {

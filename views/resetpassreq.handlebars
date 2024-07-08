@@ -1,0 +1,42 @@
+ <div>
+    <form id="formReset" class="formReset" method="post">
+        <h2>RECUPERAR CONTRASEÑA</h2>
+        <input class="formResetInput" type="email" name="email" id="email" placeholder="Ingrese su email" required>
+        <div id="btnCont">
+            <button id="btnSub" class="btnSub" type="submit">Cambiar contraseña</button>
+            <a href="/">
+                <button class="btnBack" type="button">Volver atrás</button>
+            </a>
+        </div>
+    </form>
+    <div id="message"></div>
+</div>
+
+<script>
+    document.getElementById('formReset').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const messageDiv = document.getElementById('message');
+
+        try {
+            const response = await fetch('/sessions/request-reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            const result = await response.json();
+            
+            if (response.ok) {
+                messageDiv.innerHTML = '<p>Enlace de restablecimiento de contraseña enviado a tu correo electrónico.</p>';
+            } else {
+                messageDiv.innerHTML = `<p>Error: ${result.error || 'No se pudo enviar el correo de restablecimiento de contraseña.'}</p>`;
+            }
+        } catch (error) {
+            messageDiv.innerHTML = '<p>Error al enviar la solicitud. Por favor, intenta nuevamente.</p>';
+        }
+    });
+</script>

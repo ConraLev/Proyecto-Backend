@@ -14,7 +14,11 @@ const configure = (app) => {
     router.get('/failregister', sessionController.failRegister.bind(sessionController));
     router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
     router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/' }), sessionController.githubCallback.bind(sessionController));
-    router.post('/reset_password', sessionController.resetPassword.bind(sessionController));
+    router.post('/request-reset-password', (req, res, next) => sessionController.requestResetPassword(req, res, next));
+    router.post('/reset-password', (req, res, next) => sessionController.resetPassword(req, res, next));
+    router.get('/reset_password', sessionController.renderResetPasswordPage.bind(sessionController));
+    
+  
 
     app.use('/sessions', router);
 };

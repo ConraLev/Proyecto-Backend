@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
 const viewsSchema = new mongoose.Schema({
-    viewName: { type: String, required: true },
-    // Add other fields as needed
+    viewName: { type: String, required: true }
 });
 
 const ViewsModel = mongoose.model('View', viewsSchema);

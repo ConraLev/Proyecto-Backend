@@ -15,12 +15,7 @@ const cartSchema = new mongoose.Schema({
     }],
     userId: { type: String,
          ref: 'User', required: true 
-        }/* ,
-    createdAt: {
-        type: Date,
-        default: Date.now,
-        expires: '24h'
-    } */
+        }
 });
 
 

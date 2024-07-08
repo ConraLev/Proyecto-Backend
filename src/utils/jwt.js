@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-const PRIVATE_KEY = 's3j2adxx23nm1ilb8764k'
+const PRIVATE_KEY = process.env.JWT_SECRET;
 
 module.exports = {
 
