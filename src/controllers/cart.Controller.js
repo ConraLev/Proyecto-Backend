@@ -1,5 +1,5 @@
-
 const { CustomError } = require('../services/errors/customError');
+const Product = require('../dao/models/products.model');  
 
 class CartController {
     constructor(service) {
@@ -27,7 +27,19 @@ class CartController {
     async addItemToCart(req, res) {
         const cartId = req.params.cartId;
         const { productId, quantity } = req.body;
+        const userId = req.user.id;
+        const userRole = req.user.role;
+
         try {
+            const product = await Product.findById(productId);
+            if (!product) {
+                throw new Error('Product not found');
+            }
+
+            if (userRole === 'premium' && product.owner.toString() === userId.toString()) {
+                throw new CustomError(403, 'No puedes agregar tu propio producto premium al carrito');
+            }
+
             const updatedCart = await this.service.addItemToCart(cartId, productId, quantity);
             res.json(updatedCart);
         } catch (error) {

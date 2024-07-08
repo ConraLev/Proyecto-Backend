@@ -2,10 +2,9 @@ const User = require('../dao/models/user.model');
 const Cart = require('../dao/models/carts.model');
 const { generateToken } = require('../utils/jwt');
 const { isValidPassword } = require('../utils/hashing');
-const { createError } = require('../services/errors/errorHandler');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const sendMail = require('../utils/mailer'); 
+const sendMail = require('../utils/mailer');
 const path = require('path');
 
 const adminUser = { email: 'adminCoder@coder.com', password: 'adminCod3r123', role: 'admin', firstName: 'Admin', lastName: 'Coder' };
@@ -16,6 +15,23 @@ class SessionController {
         this.service = SessionService;
     }
 
+    async changeUserRole(userId, newRole) {
+        try {
+            if (newRole !== 'user' && newRole !== 'premium') {
+                throw new Error('Rol inválido. Debe ser "user" o "premium"');
+            }
+
+            const updatedUser = await User.findByIdAndUpdate(userId, { role: newRole }, { new: true });
+
+            if (!updatedUser) {
+                throw new Error('Usuario no encontrado');
+            }
+
+            return updatedUser;
+        } catch (error) {
+            throw error;
+        }
+    }
 
     async login(req, res, next) {
         const { email, password } = req.body;
@@ -59,8 +75,6 @@ class SessionController {
             next(error);
         }
     }
-
-
 
     async register(req, res, next) {
         const { email, firstName, lastName, _id, role } = req.user;
@@ -112,9 +126,8 @@ class SessionController {
             }
 
             const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            console.log('Token generado:', token);
 
-            const resetLink = `http://localhost:${process.env.PORT}/reset_password?token=${token}`; 
+            const resetLink = `http://localhost:${process.env.PORT}/reset_password?token=${token}`;
             await sendMail(email, 'Restablecer Contraseña', `<a href="${resetLink}">Restablecer Contraseña</a>`);
             res.send('Enlace de restablecimiento de contraseña enviado a tu correo electrónico');
 
@@ -124,41 +137,38 @@ class SessionController {
         }
     }
 
+    async resetPassword(req, res, next) {
+        const { token, newPassword } = req.body;
 
-        async resetPassword(req, res, next) {
-            const { token, newPassword } = req.body;
-        
-            if (!token || !newPassword) {
-                return res.status(400).json({ error: 'Datos inválidos' });
-            }
-        
-            try {
-                const decoded = jwt.verify(token, process.env.JWT_SECRET);
-                const user = await User.findById(decoded.userId);
-        
-                if (!user) {
-                    return res.status(404).send('Usuario no encontrado');
-                }
-        
-                const isSamePassword = await bcrypt.compare(newPassword, user.password);
-                if (isSamePassword) {
-                    return res.status(400).send('La nueva contraseña debe ser diferente de la anterior');
-                }
-        
-                user.password = await bcrypt.hash(newPassword, 10);
-                await user.save();
-        
-                res.json({ message: 'Contraseña restablecida con éxito' });
-            } catch (error) {
-                if (error.name === 'TokenExpiredError') {
-                    return res.status(401).send('El enlace ha expirado, solicita un nuevo restablecimiento de contraseña');
-                }
-                console.error('Error al restablecer la contraseña:', error);
-                next(error);
-            }
+        if (!token || !newPassword) {
+            return res.status(400).json({ error: 'Datos inválidos' });
         }
-    
-      
+
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await User.findById(decoded.userId);
+
+            if (!user) {
+                return res.status(404).send('Usuario no encontrado');
+            }
+
+            const isSamePassword = await bcrypt.compare(newPassword, user.password);
+            if (isSamePassword) {
+                return res.status(400).send('La nueva contraseña debe ser diferente de la anterior');
+            }
+
+            user.password = await bcrypt.hash(newPassword, 10);
+            await user.save();
+
+            res.json({ message: 'Contraseña restablecida con éxito' });
+        } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+                return res.status(401).send('El enlace ha expirado, solicita un nuevo restablecimiento de contraseña');
+            }
+            console.error('Error al restablecer la contraseña:', error);
+            next(error);
+        }
+    }
 
     renderResetPasswordPage(req, res, next) {
         const { token } = req.query;

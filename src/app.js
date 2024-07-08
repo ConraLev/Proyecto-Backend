@@ -6,9 +6,9 @@ const cookieParser = require('cookie-parser');
 const config = require('./config/config');
 const initializeStrategy = require('./config/passport.config');
 const initializeStrategyGit = require('./config/passport-github.config');
-const initializeWsServer = require('./routers/wsServer.Router');
 const sessionMiddleware = require('./sessions/mongoStorage');
 const logger = require('./utils/logger');
+const initializeWsServer = require('./routers/wsServer.Router');
 
 const { errorHandler } = require('./services/errors/errorHandler');
 const { createDAO: createProductDAO } = require('./dao/products');
@@ -19,8 +19,8 @@ const { ProductService } = require('./services/Product.Service');
 const { CartService } = require('./services/cart.Service');
 const { SessionService } = require('./services/Session.Service');
 const { ViewsService } = require('./services/Views.Service');
-const { ProductController } = require('./controllers/Product.Controller');
-const { CartController } = require('./controllers/Cart.Controller');
+const { ProductController } = require('./controllers/product.Controller');
+const { CartController } = require('./controllers/cart.Controller');
 const { SessionController } = require('./controllers/session.Controller');
 const { ViewsController } = require('./controllers/views.Controller');
 
@@ -29,8 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(sessionMiddleware);
-app.use(errorHandler);
-
+app.use(errorHandler); 
 
 const httpServer = app.listen(config.PORT, (err) => {
     if (err) {
@@ -42,14 +41,17 @@ const httpServer = app.listen(config.PORT, (err) => {
 
 const wsServer = initializeWsServer(httpServer);
 app.set('ws', wsServer);
+
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, '../views'));
 
+
 initializeStrategy();
 initializeStrategyGit();
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -79,7 +81,8 @@ app.use(passport.session());
         require('./routers/products.Router'),
         require('./routers/carts.Router'),
         require('./routers/views.Router'),
-        require('./routers/sessions.Router')
+        require('./routers/sessions.Router'),
+        require('./routers/users.Router') 
     ];
 
     for (const route of routes) {
