@@ -3,6 +3,8 @@ const { validateProduct } = require('../test/product.validator');
 const { createError } = require('../services/errors/errorHandler');
 const { CustomError } = require('../services/errors/customError');
 const { ErrorCodes } = require('../services/errors/errorCodes');
+const  Product  = require('../dao/models/products.model');
+const  User  = require('../dao/models/user.model');
 const logger = require('../utils/logger'); 
 
 class ProductController {
@@ -117,7 +119,7 @@ class ProductController {
         }
     }
 
-    async createOne(req, res, next) {
+    /* async createOne(req, res, next) {
         const { title, description, price, thumbnail, code, stock, category } = req.body;
 
         try {
@@ -134,7 +136,72 @@ class ProductController {
             logger.error(`Error en createOne: ${error.message}`);
             next(error);
         }
-    }
+    } */
+
+
+        async createOne(req, res, next) {
+            const { title, description, price, thumbnail, code, stock, category } = req.body;
+            const userId = req.session.user._id;
+    
+            try {
+                const user = await User.findById(userId);
+    
+                if (!user || user.role !== 'premium') {
+                    return res.status(403).json({ error: 'Solo los usuarios premium pueden crear productos' });
+                }
+    
+                const validationErrors = validateProduct({ title, description, price, thumbnail, code, stock, category });
+    
+                if (validationErrors.length > 0) {
+                    logger.warn(`Validación fallida al crear producto: ${validationErrors}`);
+                    throw createError('MISSING_REQUIRED_FIELDS', validationErrors);
+                }
+    
+                const newProduct = new Product({
+                    title,
+                    description,
+                    price,
+                    thumbnail,
+                    code,
+                    stock,
+                    category,
+                    owner: user.email 
+                });
+    
+                await newProduct.save();
+                res.status(201).json(newProduct);
+            } catch (error) {
+                logger.error(`Error en createOne: ${error.message}`);
+                next(error);
+            }
+        }
+
+        async createProduct(req, res, next) {
+            const { name, price, description } = req.body;
+            const userId = req.session.user._id;
+    
+            try {
+                const user = await User.findById(userId);
+    
+                if (!user || user.role !== 'premium') {
+                    return res.status(403).json({ error: 'Solo los usuarios premium pueden crear productos' });
+                }
+    
+                const newProduct = new Product({
+                    name,
+                    price,
+                    description,
+                    owner: user.email
+                });
+    
+                await newProduct.save();
+                res.status(201).json(newProduct);
+            } catch (error) {
+                console.error('Error al crear producto:', error);
+                next(error);
+            }
+        }
+
 
     async updateOne(req, res, next) {
         const productId = req.params.id;

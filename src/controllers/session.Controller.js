@@ -124,42 +124,6 @@ class SessionController {
         }
     }
 
- 
-   /*  async resetPassword(req, res, next) {
-        const { token, newPassword } = req.body;
-    
-        if (!token || !newPassword) {
-            return res.status(400).json({ error: 'Datos inválidos' });
-        }
-    
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            const user = await User.findById(decoded.userId);
-    
-            if (!user) {
-                return res.status(404).send('Usuario no encontrado');
-            }
-    
-            const isSamePassword = await bcrypt.compare(newPassword, user.password);
-            if (isSamePassword) {
-                return res.status(400).send('La nueva contraseña debe ser diferente de la anterior');
-            }
-    
-            user.password = await bcrypt.hash(newPassword, 10);
-            await user.save();
-    
-            res.json({ message: 'Contraseña restablecida con éxito' });
-        } catch (error) {
-            if (error.name === 'TokenExpiredError') {
-                return res.status(401).send('El enlace ha expirado, solicita un nuevo restablecimiento de contraseña');
-            }
-            console.error('Error al restablecer la contraseña:', error);
-            next(error);
-        }
-    } */
-
-
-
 
         async resetPassword(req, res, next) {
             const { token, newPassword } = req.body;
@@ -177,7 +141,6 @@ class SessionController {
                 }
         
                 const isSamePassword = await bcrypt.compare(newPassword, user.password);
-                console.log(isSamePassword)
                 if (isSamePassword) {
                     return res.status(400).send('La nueva contraseña debe ser diferente de la anterior');
                 }

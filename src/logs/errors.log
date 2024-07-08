@@ -2,3 +2,15 @@
 2024-07-08T00:19:42.379Z info: Servidor escuchando en http://localhost:8080
 2024-07-08T00:22:53.562Z info: Servidor escuchando en http://localhost:8080
 2024-07-08T00:24:38.486Z info: Servidor escuchando en http://localhost:8080
+2024-07-08T00:58:05.779Z info: Servidor escuchando en http://localhost:8080
+2024-07-08T00:58:45.667Z info: Servidor escuchando en http://localhost:8080
+2024-07-08T01:00:54.814Z info: Servidor escuchando en http://localhost:8080
+2024-07-08T01:03:19.648Z info: Servidor escuchando en http://localhost:8080
+2024-07-08T01:05:15.361Z debug: Mensaje de debug
+2024-07-08T01:05:15.361Z info: Mensaje de info
+2024-07-08T01:05:15.362Z warn: Mensaje de advertencia
+2024-07-08T01:05:15.362Z error: Mensaje de error
+2024-07-08T01:05:58.652Z error: Error en getAll: Cannot read properties of undefined (reading 'cartId')
+2024-07-08T01:10:46.702Z info: Servidor escuchando en http://localhost:8080
+2024-07-08T01:14:59.441Z info: Servidor escuchando en http://localhost:8080
+2024-07-08T01:20:45.667Z info: Servidor escuchando en http://localhost:8080
