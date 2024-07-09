@@ -15,8 +15,7 @@ class ProductController {
     async getAll(req, res, next) {
         try {
             const isLoggedIn = ![null, undefined].includes(req.session.user);
-            const user = req.session.user;
-
+            const user = req.session.user || {};
             const cartId = req.session.cartId;
 
             const limit = parseInt(req.query.limit) || 10;
@@ -60,7 +59,7 @@ class ProductController {
                 title: 'Lista Productos',
                 products,
                 user: user,
-                cartId: user.cartId,
+                cartId: user.cartId || null,
                 styles: ['style'],
                 useWS: false,
                 scripts: ['index'],

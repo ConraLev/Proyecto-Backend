@@ -30,13 +30,15 @@ class ViewsController {
             if (!token) {
                 return res.render('resetpassreq', {
                     title: 'Reset Password',
-                    styles: ['resetPassStyle']
+                    styles: ['resetPassStyle'],
+                    script: ['resetPassReq']
                 });
             }
     
             return res.render('resetpassres', {
                 title: 'Reset Password',
                 styles: ['resetPassStyle'],
+                script: ['resetPassRes'],
                 token: token
             });
         } catch (error) {
