@@ -1,0 +1,139 @@
+paths:
+  /carts/{id}:
+    get:
+      summary: Obtener carrito por ID
+      tags:
+        - Cart
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 'Carrito encontrado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "404":
+          description: 'Carrito no encontrado'
+        "500":
+          description: 'Error interno'
+    put:
+      summary: Actualizar carrito por ID
+      tags:
+        - Cart
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Datos del carrito a actualizar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        "200":
+          description: 'Carrito actualizado con éxito'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "400":
+          description: 'Datos inválidos'
+        "404":
+          description: 'Carrito no encontrado'
+        "500":
+          description: 'Error interno'
+
+  /carts/{cartId}/items:
+    post:
+      summary: Agregar un producto al carrito
+      tags:
+        - Cart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: productId
+          in: query
+          description: ID del producto a agregar
+          required: true
+          schema:
+            type: string
+        - name: quantity
+          in: query
+          description: Cantidad del producto a agregar
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 'Producto agregado al carrito'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "400":
+          description: 'Datos inválidos'
+        "403":
+          description: 'No puedes agregar tu propio producto premium al carrito'
+        "404":
+          description: 'Carrito no encontrado'
+        "500":
+          description: 'Error interno'
+
+    delete:
+      summary: Eliminar un producto del carrito
+      tags:
+        - Cart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 'Producto eliminado del carrito'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "404":
+          description: 'Carrito o producto no encontrado'
+        "500":
+          description: 'Error interno'
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: ID del producto
+              quantity:
+                type: integer
+                description: Cantidad del producto en el carrito
+        userId:
+          type: string
+          description: ID del usuario dueño del carrito

@@ -1,0 +1,201 @@
+paths:
+  /products/:
+    get:
+      summary: Obtener producto/s
+      tags:
+        - Products
+      parameters:
+        - name: limit
+          in: query
+          description: Límite de productos por página
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: page
+          in: query
+          description: Página a obtener
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: sort
+          in: query
+          description: Ordenar productos (asc o desc)
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+        - name: query
+          in: query
+          description: Búsqueda general
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Filtrar por categoría
+          required: false
+          schema:
+            type: string
+        - name: availability
+          in: query
+          description: Filtrar por disponibilidad
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 'Producto/s encontrado/s'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        "400":
+          description: 'Producto/s inexistente/s'
+        "500":
+          description: 'Error interno'
+    post:
+      summary: Crear un nuevo producto
+      tags:
+        - Products
+      requestBody:
+        description: Datos del nuevo producto
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "201":
+          description: 'Producto creado con éxito'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: 'Datos inválidos'
+        "500":
+          description: 'Error interno'
+
+  /products/{id}:
+    get:
+      summary: Obtener un producto por ID
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 'Producto encontrado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "404":
+          description: 'Producto no encontrado'
+        "500":
+          description: 'Error interno'
+    put:
+      summary: Actualizar un producto por ID
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Datos del producto a actualizar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "200":
+          description: 'Producto actualizado con éxito'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: 'Datos inválidos'
+        "404":
+          description: 'Producto no encontrado'
+        "500":
+          description: 'Error interno'
+    delete:
+      summary: Eliminar un producto por ID
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 'Producto eliminado con éxito'
+        "404":
+          description: 'Producto no encontrado'
+        "500":
+          description: 'Error interno'
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID del producto 
+          example: 1
+        title:
+          type: string
+          description: Nombre del producto
+          example: Producto de Prueba
+        description:
+          type: string
+          description: Descripción
+          example: Descripcion de prueba
+        price:
+          type: number
+          description: Precio
+          example: 1000
+        thumbnail:
+          type: string
+          description: Imágenes del producto
+          example: Sin imagen
+        code:
+          type: string
+          description: Código del producto
+          example: 988721
+        stock:
+          type: number
+          description: Cantidad de productos en stock
+          example: 10
+        category:
+          type: string
+          description: Categoría del producto
+          example: Prueba
+        owner:
+          type: string
+          description: Quien realizó la carga del producto
+          example: admin
+
+
+
+
+
+
+

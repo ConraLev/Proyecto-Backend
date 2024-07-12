@@ -14,7 +14,7 @@ class ProductController {
 
     async getAll(req, res, next) {
         try {
-            const isLoggedIn = ![null, undefined].includes(req.session.user);
+            const isLoggedIn = !!req.session.user;
             const user = req.session.user || {};
             const cartId = req.session.cartId;
 
@@ -80,16 +80,41 @@ class ProductController {
         }
     }
 
+    // async getById(req, res, next) {
+    //     const productId = req.params.id;
+
+    //     if (!mongoose.Types.ObjectId.isValid(productId)) {
+    //         logger.warn(`ID de producto inválido recibido: ${productId}`);
+    //         return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
+    //     }
+
+    //     try {
+    //         const product = await this.service.getById(productId);
+    //         if (!product) {
+    //             logger.warn(`Producto no encontrado para ID: ${productId}`);
+    //             return next(new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado'));
+    //         }
+    //         res.json(product);
+    //     } catch (error) {
+    //         logger.error(`Error en getById: ${error.message}`);
+    //         next(error);
+    //     }
+    // }
+
     async getById(req, res, next) {
         const productId = req.params.id;
 
-        if (!mongoose.Types.ObjectId.isValid(productId)) {
-            logger.warn(`ID de producto inválido recibido: ${productId}`);
-            return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
-        }
-
         try {
-            const product = await this.service.getById(productId);
+            let product;
+            if (!isNaN(productId)) {
+                product = await Product.findOne({ id: parseInt(productId) });
+            } else if (mongoose.Types.ObjectId.isValid(productId)) {
+                product = await this.service.getById(productId);
+            } else {
+                logger.warn(`ID de producto inválido recibido: ${productId}`);
+                return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
+            }
+
             if (!product) {
                 logger.warn(`Producto no encontrado para ID: ${productId}`);
                 return next(new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado'));
@@ -101,24 +126,31 @@ class ProductController {
         }
     }
 
+
     async deleteById(req, res, next) {
         const productId = req.params.id;
-        const userId = req.session.user._id;
-        const userRole = req.session.user.role;
-        
+        const user = req.session.user;
+
+        if (!user) {
+            return res.status(401).json({ error: 'Usuario no autenticado' });
+        }
+
+        const userId = user._id;
+        const userRole = user.role;
+
         if (!mongoose.Types.ObjectId.isValid(productId)) {
             logger.warn(`ID de producto inválido recibido: ${productId}`);
             return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
         }
-        
+
         try {
             const product = await Product.findById(productId);
-        
+
             if (!product) {
                 logger.warn(`Producto no encontrado para ID: ${productId}`);
                 return next(new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado'));
             }
-        
+
             if (userRole === 'admin' || (userRole === 'premium' && product.owner === userId)) {
                 await this.service.deleteById(productId);
                 res.json({ message: `Producto con ID ${productId} eliminado correctamente` });
@@ -131,27 +163,31 @@ class ProductController {
             next(error);
         }
     }
-              
-
 
     async createOne(req, res, next) {
+        const user = req.session.user;
+
+        if (!user) {
+            return res.status(401).json({ error: 'Usuario no autenticado' });
+        }
+
         const { title, description, price, thumbnail, code, stock, category } = req.body;
-        const userId = req.session.user._id;
-    
+        const userId = user._id;
+
         try {
             const user = await User.findById(userId);
-    
+
             if (!user || user.role !== 'premium') {
                 return res.status(403).json({ error: 'Solo los usuarios premium pueden crear productos' });
             }
-    
+
             const validationErrors = validateProduct({ title, description, price, thumbnail, code, stock, category });
-    
+
             if (validationErrors.length > 0) {
                 logger.warn(`Validación fallida al crear producto: ${validationErrors}`);
                 throw createError('MISSING_REQUIRED_FIELDS', validationErrors);
             }
-    
+
             const newProduct = new Product({
                 title,
                 description,
@@ -160,9 +196,9 @@ class ProductController {
                 code,
                 stock,
                 category,
-                owner: user.email 
+                owner: user.email
             });
-    
+
             await newProduct.save();
             res.status(201).json(newProduct);
         } catch (error) {
@@ -171,32 +207,37 @@ class ProductController {
         }
     }
 
-     async createProduct(req, res, next) {
+    async createProduct(req, res, next) {
+        const user = req.session.user;
+
+        if (!user) {
+            return res.status(401).json({ error: 'Usuario no autenticado' });
+        }
+
         const { name, price, description } = req.body;
-        const userId = req.session.user._id;
-    
+        const userId = user._id;
+
         try {
             const user = await User.findById(userId);
-    
+
             if (!user || user.role !== 'premium') {
                 return res.status(403).json({ error: 'Solo los usuarios premium pueden crear productos' });
             }
-    
+
             const newProduct = new Product({
                 name,
                 price,
                 description,
                 owner: user.email
             });
-    
+
             await newProduct.save();
             res.status(201).json(newProduct);
         } catch (error) {
-            console.error('Error al crear producto:', error);
+            logger.error('Error en createProduct:', error.message);
             next(error);
         }
     }
-
 
     async updateOne(req, res, next) {
         const productId = req.params.id;
@@ -222,5 +263,6 @@ class ProductController {
         }
     }
 }
+
 
 module.exports = { ProductController };

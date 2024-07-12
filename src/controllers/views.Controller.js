@@ -31,14 +31,14 @@ class ViewsController {
                 return res.render('resetpassreq', {
                     title: 'Reset Password',
                     styles: ['resetPassStyle'],
-                    script: ['resetPassReq']
+                    scripts: ['resetPassReq']
                 });
             }
     
             return res.render('resetpassres', {
                 title: 'Reset Password',
                 styles: ['resetPassStyle'],
-                script: ['resetPassRes'],
+                scripts: ['resetPassRes'],
                 token: token
             });
         } catch (error) {

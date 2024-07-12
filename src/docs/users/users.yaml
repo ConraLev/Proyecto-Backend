@@ -1,0 +1,18 @@
+paths:
+  /premium/:
+    put:
+      summary: Cambia role de usuario
+      tags:
+        - Users
+      responses:
+        "200":
+          description: 'Operación exitosa'
+        "400":
+          description: 'Usuario inexistente'
+        "500":
+          description: 'Error Interno'
+  
+
+    
+    
+

@@ -180,14 +180,15 @@ class SessionController {
             return res.status(400).send('Token es requerido');
         }
 
-
         res.render(('resetpassres', {
             title: 'Restablecer Contraseña',
-            style: ['resetPassStyle'],
-            script: ['resetPassRes']
+            styles: ['resetPassStyle'],
+            scripts: ['resetPassRes']
         }), { token });
 
     }
 }
 
 module.exports = { SessionController };
+
+

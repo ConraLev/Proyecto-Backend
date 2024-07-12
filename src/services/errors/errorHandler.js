@@ -11,9 +11,13 @@ const errorDictionary = {
     CART_NOT_FOUND: { code: 404, message: 'Carro no encontrado' },
     INVALID_PRODUCT_DATA: { code: 400, message: 'Dato ingresado invalido' },
     MISSING_REQUIRED_FIELDS: { code: 400, message: 'No se completo todos los campos' },
-    INVALID_CREDENTIALS: {code: 400, message: 'Credencial invalida'},
-    INVALID_PASSWORD: {code: 400, message: 'Contraseña incorrecta'}
+    INVALID_CREDENTIALS: { code: 400, message: 'Credencial invalida' },
+    INVALID_PASSWORD: { code: 400, message: 'Contraseña incorrecta' },
+    USER_NOT_FOUND: { code: 404, message: 'Usuario no encontrado' },
+    INVALID_ROLE: { code: 400, message: 'Rol inválido. Debe ser "user" o "premium"' },
+    TOKEN_EXPIRED: { code: 401, message: 'El enlace ha expirado, solicita un nuevo restablecimiento de contraseña' },
 };
+
 
 const createError = (type, details) => {
     const error = errorDictionary[type];
@@ -40,8 +44,8 @@ const errorHandler = (err, req, res, next) => {
     });
 };
 
-CustomError,
 module.exports = {
+    CustomError,
     createError,
     errorHandler,
 };

@@ -23,6 +23,9 @@ const { ProductController } = require('./controllers/product.Controller');
 const { CartController } = require('./controllers/cart.Controller');
 const { SessionController } = require('./controllers/session.Controller');
 const { ViewsController } = require('./controllers/views.Controller');
+const { title } = require('process');
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 const app = express();
 app.use(express.json());
@@ -30,6 +33,22 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(sessionMiddleware);
 app.use(errorHandler); 
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info:{
+            title: 'eCommerce API Documentation',
+            description: 'API documentation for the eCommerce project'
+        }
+    },
+    apis: [
+        `${__dirname}/docs/**/*.yaml`
+        ]
+}
+
+const specs = swaggerJSDoc(swaggerOptions);
+app.use('/apidocs', swaggerUi.serve, swaggerUi.setup(specs));
 
 const httpServer = app.listen(config.PORT, (err) => {
     if (err) {
@@ -47,7 +66,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, '../views'));
-
 
 initializeStrategy();
 initializeStrategyGit();

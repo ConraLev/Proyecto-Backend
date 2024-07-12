@@ -1,5 +1,5 @@
-const { CustomError } = require('../services/errors/CustomError');
-const { ErrorCodes } = require('../services/errors/errorCodes')
+const { CustomError } = require('../services/errors/customError');
+const { ErrorCodes } = require('../services/errors/errorCodes');
 
 class ProductService {
     constructor(storage) {
@@ -10,54 +10,89 @@ class ProductService {
         return this.storage.getAll();
     }
 
-    getById(id) {
-        if (!id) {
-            throw new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID inválido');
+    async getById(id) {
+        try {
+            const objectId = this.toObjectId(id);
+            if (!objectId) {
+                throw new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID inválido');
+            }
+            const product = await this.storage.getById(objectId);
+            if (!product) {
+                throw new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado');
+            }
+            return product;
+        } catch (error) {
+            throw error;
         }
-        return this.storage.getById(id);
     }
 
-    deleteById(id) {
-        if (!id) {
-            throw new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID inválido');
+    async deleteById(id) {
+        try {
+            const objectId = this.toObjectId(id);
+            if (!objectId) {
+                throw new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID inválido');
+            }
+            await this.storage.deleteById(objectId);
+        } catch (error) {
+            throw error;
         }
-        return this.storage.deleteById(id);
     }
 
-    createOne({ title, description, price, thumbnail, code, stock, category }) {
-        if (!title || !description || !price || !thumbnail || !code || !stock || !category) {
-            throw new CustomError(ErrorCodes.MISSING_REQUIRED_FIELDS, 'Faltan campos requeridos');
+    async createOne({ title, description, price, thumbnail, code, stock, category }) {
+        try {
+            if (!title || !description || !price || !thumbnail || !code || !stock || !category) {
+                throw new CustomError(ErrorCodes.MISSING_REQUIRED_FIELDS, 'Faltan campos requeridos');
+            }
+            return await this.storage.createOne({ title, description, price, thumbnail, code, stock, category });
+        } catch (error) {
+            throw error;
         }
-        return this.storage.createOne({ title, description, price, thumbnail, code, stock, category });
     }
 
-    updateById(productId, updatedFields) {
-        if (!productId || !updatedFields) {
-            throw new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID o campos de actualización inválidos');
+    async updateById(productId, updatedFields) {
+        try {
+            const objectId = this.toObjectId(productId);
+            if (!objectId || !updatedFields) {
+                throw new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID o campos de actualización inválidos');
+            }
+            const updatedProduct = await this.storage.updateById(objectId, updatedFields);
+            if (!updatedProduct) {
+                throw new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado para actualizar');
+            }
+            return updatedProduct;
+        } catch (error) {
+            throw error;
         }
-        return this.storage.updateById(productId, updatedFields);
     }
 
-    countDocuments(match) {
+    async countDocuments(match) {
         return this.storage.countDocuments(match);
     }
 
+    async find(match, { sort, skip, limit }) {
+        try {
+            const products = await this.storage.find(match);
+            if (sort) {
+                products.sort((a, b) => {
+                    if (a.price < b.price) return -sort;
+                    if (a.price > b.price) return sort;
+                    return 0;
+                });
+            }
+            return products.slice(skip, skip + limit);
+        } catch (error) {
+            throw error;
+        }
+    }
 
-    find(match, { sort, skip, limit }) {
-        return this.storage.find(match)
-            .then(products => {
-                if (sort) {
-                    products.sort((a, b) => {
-                        if (a.price < b.price) return -sort;
-                        if (a.price > b.price) return sort;
-                        return 0;
-                    });
-                }
-                return products.slice(skip, skip + limit);
-            });
+    toObjectId(id) {
+        const mongoose = require('mongoose');
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            return mongoose.Types.ObjectId(id);
+        }
+        return null;
     }
 }
 
 module.exports = { ProductService };
-
 
