@@ -27,10 +27,6 @@
 2024-07-12T01:44:47.957Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T01:45:34.081Z warn: ID de producto inválido recibido: 1
 2024-07-12T01:48:57.152Z warn: ID de producto inválido recibido: 1
-2024-07-12T02:06:15.621Z info: Servidor escuchando en http://localhost:8080
-2024-07-12T02:08:23.628Z info: Servidor escuchando en http://localhost:8080
-2024-07-12T02:08:49.626Z info: Servidor escuchando en http://localhost:8080
-2024-07-12T02:09:18.929Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T02:11:28.525Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T02:11:49.272Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T02:11:58.540Z warn: Validación fallida al crear producto: [object Object]
@@ -39,3 +35,5 @@
 2024-07-12T02:15:20.179Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T02:17:29.212Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T02:17:41.057Z error: Error en createOne: products validation failed: id: Path `id` is required.
+2024-07-12T02:28:51.656Z info: Servidor escuchando en http://localhost:8080
+2024-07-14T16:36:32.800Z info: Servidor escuchando en http://localhost:8080

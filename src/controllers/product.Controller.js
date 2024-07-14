@@ -80,27 +80,6 @@ class ProductController {
         }
     }
 
-    // async getById(req, res, next) {
-    //     const productId = req.params.id;
-
-    //     if (!mongoose.Types.ObjectId.isValid(productId)) {
-    //         logger.warn(`ID de producto inválido recibido: ${productId}`);
-    //         return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
-    //     }
-
-    //     try {
-    //         const product = await this.service.getById(productId);
-    //         if (!product) {
-    //             logger.warn(`Producto no encontrado para ID: ${productId}`);
-    //             return next(new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado'));
-    //         }
-    //         res.json(product);
-    //     } catch (error) {
-    //         logger.error(`Error en getById: ${error.message}`);
-    //         next(error);
-    //     }
-    // }
-
     async getById(req, res, next) {
         const productId = req.params.id;
 
