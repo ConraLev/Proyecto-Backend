@@ -1,39 +1,58 @@
 2024-07-08T01:00:54.814Z info: Servidor escuchando en http://localhost:8080
-2024-07-08T01:03:19.648Z info: Servidor escuchando en http://localhost:8080
 2024-07-08T01:05:15.361Z debug: Mensaje de debug
 2024-07-08T01:05:15.361Z info: Mensaje de info
 2024-07-08T01:05:15.362Z warn: Mensaje de advertencia
 2024-07-08T01:05:15.362Z error: Mensaje de error
 2024-07-08T01:05:58.652Z error: Error en getAll: Cannot read properties of undefined (reading 'cartId')
 2024-07-08T01:10:46.702Z info: Servidor escuchando en http://localhost:8080
-2024-07-08T02:23:53.061Z info: Servidor escuchando en http://localhost:8080
-2024-07-08T02:24:31.683Z info: Servidor escuchando en http://localhost:8080
 2024-07-08T02:24:44.259Z error: Error en getAll: Cannot read properties of undefined (reading 'cartId')
 2024-07-08T02:26:39.640Z info: Servidor escuchando en http://localhost:8080
-2024-07-08T03:14:50.694Z info: Servidor escuchando en http://localhost:8080
-2024-07-08T20:53:37.652Z info: Servidor escuchando en http://localhost:8080
 2024-07-09T11:32:07.051Z error: Error en getAll: Cannot read properties of undefined (reading 'cartId')
 2024-07-09T12:44:29.173Z error: Error en getAll: Cannot read properties of undefined (reading 'cartId')
 2024-07-12T01:04:36.433Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T01:04:54.087Z warn: Validación fallida al crear producto: [object Object],[object Object]
 2024-07-12T01:04:54.088Z error: Error en createOne: No se completo todos los campos
 2024-07-12T01:15:36.981Z info: Servidor escuchando en http://localhost:8080
-2024-07-12T01:17:37.973Z info: Servidor escuchando en http://localhost:8080
-2024-07-12T01:19:17.766Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T01:20:23.817Z warn: Validación fallida al crear producto: [object Object],[object Object]
 2024-07-12T01:20:23.818Z error: Error en createOne: No se completo todos los campos
 2024-07-12T01:20:45.711Z warn: ID de producto inválido recibido: {id}
-2024-07-12T01:43:33.857Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T01:44:47.957Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T01:45:34.081Z warn: ID de producto inválido recibido: 1
 2024-07-12T01:48:57.152Z warn: ID de producto inválido recibido: 1
 2024-07-12T02:11:28.525Z info: Servidor escuchando en http://localhost:8080
-2024-07-12T02:11:49.272Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T02:11:58.540Z warn: Validación fallida al crear producto: [object Object]
 2024-07-12T02:11:58.541Z error: Error en createOne: No se completo todos los campos
-2024-07-12T02:13:02.151Z info: Servidor escuchando en http://localhost:8080
-2024-07-12T02:15:20.179Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T02:17:29.212Z info: Servidor escuchando en http://localhost:8080
 2024-07-12T02:17:41.057Z error: Error en createOne: products validation failed: id: Path `id` is required.
 2024-07-12T02:28:51.656Z info: Servidor escuchando en http://localhost:8080
-2024-07-14T16:36:32.800Z info: Servidor escuchando en http://localhost:8080
+2024-07-14T21:20:06.167Z warn: Producto no encontrado para ID: 1
+2024-07-14T21:20:06.173Z warn: ID de producto inválido recibido: 12024-07-25T23:21:10.447Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:32:17.390Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:34:25.174Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:39:07.259Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:40:07.991Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:40:14.355Z info: Servidor escuchando en http://localhost:8080
+2024-07-25T23:40:35.075Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:40:41.704Z info: Servidor escuchando en http://localhost:8080
+2024-07-25T23:41:14.183Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:41:16.912Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:41:25.533Z info: Servidor escuchando en http://localhost:8080
+2024-07-25T23:41:52.543Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:41:58.676Z info: Servidor escuchando en http://localhost:8080
+2024-07-25T23:42:20.570Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:44:00.436Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:44:29.016Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:44:33.769Z info: Servidor escuchando en http://localhost:8080
+2024-07-25T23:47:12.144Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:47:19.557Z info: Servidor escuchando en http://localhost:8080
+2024-07-25T23:47:48.244Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:47:52.553Z info: Servidor escuchando en http://localhost:8080
+2024-07-25T23:48:35.316Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:50:09.899Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:50:13.080Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:50:21.770Z info: Servidor escuchando en http://localhost:8080
+2024-07-25T23:51:50.369Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:52:08.913Z info: Servidor escuchando en http://localhost:8000
+2024-07-25T23:52:17.829Z info: Servidor escuchando en http://localhost:8000
+2024-07-26T00:50:51.878Z info: Servidor escuchando en http://localhost:8000
+2024-07-26T00:51:18.266Z info: Servidor escuchando en http://localhost:8080

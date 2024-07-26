@@ -16,15 +16,15 @@ class ProductController {
         try {
             const isLoggedIn = !!req.session.user;
             const user = req.session.user || {};
-            const cartId = req.session.cartId;
-
+            const cartId = req.session.user ? req.session.user.cartId : null;
+    
             const limit = parseInt(req.query.limit) || 10;
             const page = parseInt(req.query.page) || 1;
             const sort = req.query.sort === 'desc' ? -1 : 1;
             const query = req.query.query || '';
             const category = req.query.category || '';
             const availability = req.query.availability || '';
-
+    
             const match = {};
             if (query) {
                 match.$or = [
@@ -38,28 +38,28 @@ class ProductController {
             if (availability) {
                 match.availability = { $regex: availability, $options: 'i' };
             }
-
+    
             const totalProducts = await this.service.countDocuments(match);
             const totalPages = Math.ceil(totalProducts / limit);
-
+    
             const skip = (page - 1) * limit;
-
+    
             const products = await this.service.find(match, { sort, skip, limit });
-
+    
             const hasNextPage = page < totalPages;
             const hasPrevPage = page > 1;
-
+    
             const prevPage = hasPrevPage ? page - 1 : null;
             const nextPage = hasNextPage ? page + 1 : null;
-
+    
             const prevLink = hasPrevPage ? `/products?page=${prevPage}&limit=${limit}&sort=${req.query.sort}&query=${query}&category=${category}&availability=${availability}` : null;
             const nextLink = hasNextPage ? `/products?page=${nextPage}&limit=${limit}&sort=${req.query.sort}&query=${query}&category=${category}&availability=${availability}` : null;
-
+    
             res.render('home', {
                 title: 'Lista Productos',
                 products,
                 user: user,
-                cartId: user.cartId || null,
+                cartId: cartId,
                 styles: ['style'],
                 useWS: false,
                 scripts: ['index'],
@@ -79,6 +79,7 @@ class ProductController {
             next(error);
         }
     }
+    
 
     async getById(req, res, next) {
         const productId = req.params.id;
@@ -90,7 +91,7 @@ class ProductController {
             } else if (mongoose.Types.ObjectId.isValid(productId)) {
                 product = await this.service.getById(productId);
             } else {
-                logger.warn(`ID de producto inválido recibido: ${productId}`);
+                logger.warn(`ID de producto inválido recibido GETBYID: ${productId}`);
                 return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
             }
 
@@ -118,7 +119,7 @@ class ProductController {
         const userRole = user.role;
 
         if (!mongoose.Types.ObjectId.isValid(productId)) {
-            logger.warn(`ID de producto inválido recibido: ${productId}`);
+            logger.warn(`ID de producto inválido recibido DELETEBYID: ${productId}`);
             return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
         }
 
@@ -223,7 +224,7 @@ class ProductController {
         const updatedFields = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(productId)) {
-            logger.warn(`ID de producto inválido recibido: ${productId}`);
+            logger.warn(`ID de producto inválido recibido UPDATE: ${productId}`);
             return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
         }
 

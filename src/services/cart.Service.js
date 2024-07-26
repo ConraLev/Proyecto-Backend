@@ -7,11 +7,12 @@ class CartService {
     }
 
     async getCartById(cartId) {
-        const cart = await this.cartDao.getCartById(cartId);
-        if (!cart) {
-            throw new CustomError(ErrorCodes.CART_NOT_FOUND, 'Carrito no encontrado');
+        try {
+            return await this.cartDao.getById(cartId); 
+        } catch (error) {
+            console.error('Error fetching cart by ID:', error);
+            throw new Error(`Error fetching cart with ID: ${cartId}`);
         }
-        return cart;
     }
 
     async addItemToCart(cartId, productId, quantity) {

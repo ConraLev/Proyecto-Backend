@@ -7,6 +7,7 @@ class CartController {
     }
 
     #handleError(res, err) {
+        console.error('Error:', err); 
         if (err instanceof CustomError) {
             return res.status(err.code).json({ error: err.message, details: err.details });
         }
@@ -15,12 +16,14 @@ class CartController {
     }
 
     async getCartById(req, res) {
-        const cartId = req.params.id;
         try {
+            const cartId = req.params.id;
+            console.log(`Fetching cart with ID: ${cartId}`);
             const cart = await this.service.getCartById(cartId);
             res.json(cart);
         } catch (error) {
-            this.#handleError(res, error);
+            console.error('Error in getCartById:', error);
+            res.status(500).json({ error: error.message });
         }
     }
 
@@ -91,4 +94,4 @@ class CartController {
     }
 }
 
-module.exports = { CartController };
+module.exports =  { CartController };

@@ -15,34 +15,35 @@
 
 <div id="prodMasChat" class="prodMasChat">
     <div class="listaProd" id="productos">
-    {{#each products}}
-        <div class="listaProductos" id="listaProductos">
-            <h4>ID PRODUCTO: </h4><p>{{id}}</p>
-            <h4>NOMBRE: </h4><p>{{title}}</p>
-            <h4>DESCRIPCION: </h4><p>{{description}}</p>
-            <h4>PRECIO: </h4><p>{{price}}</p>
-            <h4>IMAGENES: </h4><p>{{thumbnails}}</p>
-            <h4>CODIGO: </h4><p>{{code}}</p>
-            <h4>STOCK: </h4><p>{{stock}}</p>
-            <h4>CATEGORIA: </h4><p>{{category}}</p>
-            <button class="add-to-cart-btn" data-product-id="{{_id}}">Agregar al carrito</button>
-        </div>
-    {{/each}}
+        {{#each products}}
+            <div class="listaProductos" id="listaProductos">
+                <h4>ID PRODUCTO: </h4><p>{{id}}</p>
+                <h4>NOMBRE: </h4><p>{{title}}</p>
+                <h4>DESCRIPCION: </h4><p>{{description}}</p>
+                <h4>PRECIO: </h4><p>{{price}}</p>
+                <h4>IMAGENES: </h4><p>{{thumbnails}}</p>
+                <h4>CODIGO: </h4><p>{{code}}</p>
+                <h4>STOCK: </h4><p>{{stock}}</p>
+                <h4>CATEGORIA: </h4><p>{{category}}</p>
+                <button class="addToCard" data-product-id="{{id}}">Agregar al carrito</button>
+            </div>
+        {{/each}}
 
-    <div class="pagination" id="pagination">
-        {{#if hasPrevPage}}
-            <a href="{{prevLink}}">
-                <button id="BtnAtras" class="BtnAtras" type="button">Anterior</button></a>
-        {{/if}}
-        {{#if hasNextPage}}
-            <a href="{{nextLink}}">
-                <button id="BtnSig" class="BtnSig" type="button">Siguiente</button></a>
-        {{/if}}
-    </div>
+        <div class="pagination" id="pagination">
+            {{#if hasPrevPage}}
+                <a href="{{prevLink}}">
+                    <button id="BtnAtras" class="BtnAtras" type="button">Anterior</button></a>
+            {{/if}}
+            {{#if hasNextPage}}
+                <a href="{{nextLink}}">
+                    <button id="BtnSig" class="BtnSig" type="button">Siguiente</button></a>
+            {{/if}}
+        </div>
     </div>
 </div>
 
 <script>
     const cartId = '{{cartId}}'; 
 </script>
+
 

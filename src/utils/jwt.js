@@ -28,7 +28,7 @@ module.exports = {
                 return res.status(401).json({ error: 'Invalid Token' });
             }
 
-            req.authUser = credentials;
+            req.user = credentials;
             next();
         });
     }

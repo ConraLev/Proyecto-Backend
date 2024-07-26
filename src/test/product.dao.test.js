@@ -19,12 +19,12 @@ describe('Testing Product DAO', () => {
     });
 
     after(async() => {
-        await connection.db.dropDatabase();
+        // await connection.db.dropDatabase();
         await connection.close();
     });
 
-    beforeEach(function() {
-        this.timeout(3000);
+    beforeEach(async () => { 
+        await mongoose.connection.db.collection('products').deleteMany({});
     });
 
     it('El resultado debe ser un array', async() => {

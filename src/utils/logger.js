@@ -3,7 +3,6 @@ const path = require('path');
 
 const env = process.env.NODE_ENV || 'development';
 
-// Definir niveles de logging
 const levels = {
     debug: 0,
     info: 1,
@@ -12,7 +11,6 @@ const levels = {
     fatal: 4
 };
 
-// Formato para los logs
 const logFormat = format.combine(
     format.timestamp(),
     format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)

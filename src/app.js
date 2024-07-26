@@ -18,7 +18,7 @@ const { createDAO: createViewsDAO } = require('./dao/views');
 const { ProductService } = require('./services/Product.Service');
 const { CartService } = require('./services/cart.Service');
 const { SessionService } = require('./services/Session.Service');
-const { ViewsService } = require('./services/Views.Service');
+const { ViewsService } = require('./services/views.Service');
 const { ProductController } = require('./controllers/product.Controller');
 const { CartController } = require('./controllers/cart.Controller');
 const { SessionController } = require('./controllers/session.Controller');
@@ -73,6 +73,7 @@ initializeStrategyGit();
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 (async () => {
     const productDAO = await createProductDAO();
     const productService = new ProductService(productDAO);
@@ -80,7 +81,7 @@ app.use(passport.session());
 
     const cartDAO = await createCartDAO();
     const cartService = new CartService(cartDAO);
-    const cartController = new CartController(cartService);
+    const cartController = new CartController(cartService); 
 
     const sessionDAO = await createSessionDAO('mongo');
     const sessionService = new SessionService(sessionDAO);
@@ -91,9 +92,10 @@ app.use(passport.session());
     const viewsController = new ViewsController(viewsService);
 
     app.set('productController', productController);
-    app.set('cartController', cartController);
+    app.set('cartService', cartService); 
     app.set('sessionController', sessionController);
     app.set('viewsController', viewsController);
+    app.set('cartController', cartController);
 
     const routes = [
         require('./routers/products.Router'),

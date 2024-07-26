@@ -33,36 +33,43 @@ class SessionController {
         }
     }
 
+
     async login(req, res, next) {
         const { email, password } = req.body;
-
+    
         if (!email || !password) {
             return res.status(400).json({ error: 'Datos inválidos' });
         }
-
+    
         if (email === adminUser.email && password === adminUser.password) {
             req.session.user = adminUser;
             return res.redirect('/products');
         }
-
+    
         try {
             const user = await this.service.findUserByEmail(email);
             if (!user) {
                 return res.status(404).json({ error: 'Correo no registrado' });
             }
-
+    
             if (!isValidPassword(password, user.password)) {
                 return res.status(400).json({ error: 'Contraseña incorrecta' });
             }
-
+    
+            const cart = await Cart.findOne({ userId: user._id });
+            if (!cart) {
+                return res.status(404).json({ error: 'Carrito no encontrado' });
+            }
+    
             req.session.user = {
                 email: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 _id: user._id.toString(),
-                role: user.role
+                role: user.role,
+                cartId: cart._id.toString() 
             };
-
+    
             const credentials = {
                 email: user.email,
                 _id: user._id.toString(),
@@ -75,22 +82,25 @@ class SessionController {
             next(error);
         }
     }
-
+    
     async register(req, res, next) {
         const { email, firstName, lastName, _id, role } = req.user;
         req.session.user = { email, firstName, lastName, _id: _id.toString(), role };
-
+    
         try {
             const newCart = new Cart({ userId: _id, items: [] });
             const savedCart = await newCart.save();
-
+    
             await User.findByIdAndUpdate(_id, { cartId: savedCart._id });
+    
+            req.session.cartId = savedCart._id.toString(); 
             res.redirect('/products');
         } catch (error) {
             console.error('Error al registrar usuario y/o carrito:', error);
             next(error);
         }
     }
+    
 
     failRegister(_, res) {
         res.send('Error al registrar el usuario');

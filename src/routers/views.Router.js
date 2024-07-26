@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { userIsLoggedIn, userIsNotLoggedIn } = require('../middlewares/auth.middleware');
+const { userIsNotLoggedIn } = require('../middlewares/auth.middleware');
 
 const { ViewsController } = require('../controllers/views.Controller');
 const { ViewsService } = require('../services/views.Service');
