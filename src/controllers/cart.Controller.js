@@ -18,9 +18,8 @@ class CartController {
     async getCartById(req, res) {
         try {
             const cartId = req.params.id;
-            console.log(`Fetching cart with ID: ${cartId}`);
             const cart = await this.service.getCartById(cartId);
-            res.json(cart);
+            res.status(200).json(cart);
         } catch (error) {
             console.error('Error in getCartById:', error);
             res.status(500).json({ error: error.message });
@@ -44,7 +43,7 @@ class CartController {
             }
 
             const updatedCart = await this.service.addItemToCart(cartId, productId, quantity);
-            res.json(updatedCart);
+            res.status(200).json(updatedCart);
         } catch (error) {
             this.#handleError(res, error);
         }

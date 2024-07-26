@@ -20,12 +20,12 @@ describe('Testing Products Router', () => {
         owner: "admin"
     };
 
-    before(async () => {
-        const chai = await import('chai');
-        global.expect = chai.expect;
-        mongooseConnection = await mongoose.connect(mongoUrl, { dbName: 'Testing' });
-        connection = mongooseConnection.connection;
-    });
+    // before(async () => {
+    //     const chai = await import('chai');
+    //     global.expect = chai.expect;
+    //     mongooseConnection = await mongoose.connect(mongoUrl, { dbName: 'Testing' });
+    //     connection = mongooseConnection.connection;
+    // });
 
     after(async () => {
         await connection.close();
@@ -62,7 +62,7 @@ describe('Testing Products Router', () => {
    
     });
 
-    it('DELETE /products/:id should delete a product by ID', async () => {
+    it('DELETE /products/:id Deberia borrar un producto por ID', async () => {
   
         await productDAO.createOne(newProduct);
         const deleteProduct = await productDAO.deleteById(50)
