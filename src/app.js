@@ -9,6 +9,8 @@ const initializeStrategyGit = require('./config/passport-github.config');
 const sessionMiddleware = require('./sessions/mongoStorage');
 const logger = require('./utils/logger');
 const initializeWsServer = require('./routers/wsServer.Router');
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 const { errorHandler } = require('./services/errors/errorHandler');
 const { createDAO: createProductDAO } = require('./dao/products');
@@ -23,9 +25,6 @@ const { ProductController } = require('./controllers/product.Controller');
 const { CartController } = require('./controllers/cart.Controller');
 const { SessionController } = require('./controllers/session.Controller');
 const { ViewsController } = require('./controllers/views.Controller');
-const { title } = require('process');
-const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
 
 const app = express();
 app.use(express.json());

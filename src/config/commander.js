@@ -12,5 +12,5 @@ const options = program.opts();
 
 process.env.MODE = options.mode;
 
-module.exports = program.opts();
 
+module.exports = options;

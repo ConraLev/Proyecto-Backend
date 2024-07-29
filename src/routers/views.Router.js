@@ -30,6 +30,9 @@ router.get('/realtimeproducts', withController((controller, req, res) => control
 
 router.get('/chat', withController((controller, req, res) => controller.renderChatPage(req, res)));
 
+router.get('/products', withController((controller, req, res, next) => controller.renderProductsPage(req, res, next)));
+
+
 module.exports = {
     configure: app => app.use('/', router)
 };

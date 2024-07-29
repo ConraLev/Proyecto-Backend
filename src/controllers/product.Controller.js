@@ -14,72 +14,13 @@ class ProductController {
 
     async getAll(req, res, next) {
         try {
-            const isLoggedIn = !!req.session.user;
-            const user = req.session.user || {};
-            const cartId = req.session.user ? req.session.user.cartId : null;
-    
-            const limit = parseInt(req.query.limit) || 10;
-            const page = parseInt(req.query.page) || 1;
-            const sort = req.query.sort === 'desc' ? -1 : 1;
-            const query = req.query.query || '';
-            const category = req.query.category || '';
-            const availability = req.query.availability || '';
-    
-            const match = {};
-            if (query) {
-                match.$or = [
-                    { category: { $regex: query, $options: 'i' } },
-                    { availability: { $regex: query, $options: 'i' } }
-                ];
-            }
-            if (category) {
-                match.category = { $regex: category, $options: 'i' };
-            }
-            if (availability) {
-                match.availability = { $regex: availability, $options: 'i' };
-            }
-    
-            const totalProducts = await this.service.countDocuments(match);
-            const totalPages = Math.ceil(totalProducts / limit);
-    
-            const skip = (page - 1) * limit;
-    
-            const products = await this.service.find(match, { sort, skip, limit });
-    
-            const hasNextPage = page < totalPages;
-            const hasPrevPage = page > 1;
-    
-            const prevPage = hasPrevPage ? page - 1 : null;
-            const nextPage = hasNextPage ? page + 1 : null;
-    
-            const prevLink = hasPrevPage ? `/products?page=${prevPage}&limit=${limit}&sort=${req.query.sort}&query=${query}&category=${category}&availability=${availability}` : null;
-            const nextLink = hasNextPage ? `/products?page=${nextPage}&limit=${limit}&sort=${req.query.sort}&query=${query}&category=${category}&availability=${availability}` : null;
-    
-            res.render('home', {
-                title: 'Lista Productos',
-                products,
-                user: user,
-                cartId: cartId,
-                styles: ['style'],
-                useWS: false,
-                scripts: ['index'],
-                totalPages,
-                prevPage,
-                nextPage,
-                page,
-                hasPrevPage,
-                hasNextPage,
-                prevLink,
-                nextLink,
-                isLoggedIn,
-                isNotLoggedIn: !isLoggedIn
-            });
+            const products = await this.service.getAllProducts();
+            res.json(products);
         } catch (error) {
             logger.error(`Error en getAll: ${error.message}`);
             next(error);
         }
     }
-    
 
     async getById(req, res, next) {
         const productId = req.params.id;
@@ -105,7 +46,6 @@ class ProductController {
             next(error);
         }
     }
-
 
     async deleteById(req, res, next) {
         const productId = req.params.id;

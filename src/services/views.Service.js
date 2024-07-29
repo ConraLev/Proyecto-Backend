@@ -3,6 +3,14 @@ class ViewsService {
         this.storage = storage;
     }
 
+    countDocuments(match) {
+        return this.storage.countDocuments(match);
+    }
+
+    find(match, options) {
+        return this.storage.find(match, options);
+    }
+
     findUserById(userId) {
         return this.storage.findUserById(userId);
     }

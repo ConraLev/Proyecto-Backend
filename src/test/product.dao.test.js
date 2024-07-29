@@ -1,6 +1,3 @@
-const dotenv = require('dotenv');
-dotenv.config({ path: '../src/config/.dev.env' });
-
 const mongoose = require('mongoose');
 const { MongoDAO } = require('../dao/products/mongo');
 const { mongoUrl } = require('../config/dbConfig');
@@ -12,27 +9,30 @@ describe('Testing Product DAO', () => {
 
     const productDAO = new MongoDAO();
     let connection = null;
+    let mongooseConnection = null;
 
-    before(async() => {
+    before(async () => {
         mongooseConnection = await mongoose.connect(mongoUrl, { dbName: 'Testing' });
         connection = mongooseConnection.connection;
     });
 
-    after(async() => {
-        // await connection.db.dropDatabase();
-        await connection.close();
+    after(async () => {
+        if (connection && connection.db) {
+            await connection.db.dropDatabase();
+        }
+        await mongoose.disconnect();
     });
 
     beforeEach(async () => { 
         await mongoose.connection.db.collection('products').deleteMany({});
     });
 
-    it('El resultado debe ser un array', async() => {
+    it('El resultado debe ser un array', async () => {
         const result = await productDAO.getAll();
         assert.strictEqual(Array.isArray(result), true);
     });
 
-    it('Debe devolver un producto por ID', async() => {
+    it('Debe devolver un producto por ID', async () => {
         const mockProduct = {
             id: 20,
             title: "Casco de moto Premium",
@@ -47,12 +47,12 @@ describe('Testing Product DAO', () => {
 
         await productDAO.createOne(mockProduct);
 
-        const product = await productDAO.getById(20);
-        assert.ok(product.id);
-        assert.strictEqual(product.id, 20);
+        const product = await productDAO.getById(mockProduct.id);
+        assert.ok(product._id);
+        assert.strictEqual(product.id.toString(), mockProduct.id.toString()); // Compare ObjectIds as strings
     });
 
-    it('Debe crear un nuevo producto', async() => {
+    it('Debe crear un nuevo producto', async () => {
         const mockProduct = {
             id: 21,
             title: "Guantes de moto",
@@ -66,11 +66,11 @@ describe('Testing Product DAO', () => {
         };
 
         const createdProduct = await productDAO.createOne(mockProduct);
-        assert.ok(createdProduct._id);
-        assert.strictEqual(createdProduct.id, 21);
+        assert.ok(createdProduct.id);
+        assert.strictEqual(createdProduct.id.toString(), mockProduct.id.toString()); // Compare ObjectIds as strings
     });
 
-    it('Debe actualizar un producto por ID', async() => {
+    it('Debe actualizar un producto por ID', async () => {
         const mockProduct = {
             id: 22,
             title: "Botas de moto",
@@ -85,11 +85,11 @@ describe('Testing Product DAO', () => {
 
         await productDAO.createOne(mockProduct);
 
-        const updatedProduct = await productDAO.updateById(22, { price: 220000 });
+        const updatedProduct = await productDAO.updateById(mockProduct.id, { price: 220000 });
         assert.strictEqual(updatedProduct.price, 220000);
     });
 
-    it('Debe eliminar un producto por ID', async() => {
+    it('Debe eliminar un producto por ID', async () => {
         const mockProduct = {
             id: 23,
             title: "Chaqueta de moto",
@@ -104,11 +104,11 @@ describe('Testing Product DAO', () => {
 
         await productDAO.createOne(mockProduct);
 
-        const deletedProduct = await productDAO.deleteById(23);
-        assert.strictEqual(deletedProduct.id, 23);
+        const deletedProduct = await productDAO.deleteById(mockProduct.id);
+        assert.strictEqual(deletedProduct.id.toString(), mockProduct.id.toString()); // Compare ObjectIds as strings
     });
 
-    it('Debe contar el número de documentos que coinciden con un criterio', async() => {
+    it('Debe contar el número de documentos que coinciden con un criterio', async () => {
         const mockProduct = {
             id: 24,
             title: "Casco de moto Premium",
@@ -124,10 +124,10 @@ describe('Testing Product DAO', () => {
         await productDAO.createOne(mockProduct);
 
         const count = await productDAO.countDocuments({ category: "Indumentaria" });
-        assert.strict(count, 1);
+        assert.strictEqual(count, 1);
     });
 
-    it('Debe encontrar productos que coincidan con un criterio', async() => {
+    it('Debe encontrar productos que coincidan con un criterio', async () => {
         const mockProduct = {
             id: 25,
             title: "Casco de moto Premium",
@@ -143,7 +143,7 @@ describe('Testing Product DAO', () => {
         await productDAO.createOne(mockProduct);
 
         const products = await productDAO.find({ category: "Indumentaria" });
-        assert.strict(products.length, 1);
-        assert.strict(products[0].id, 25);
+        assert.strictEqual(products.length, 1);
+        assert.strictEqual(products[0].id.toString(), mockProduct.id.toString()); // Compare ObjectIds as strings
     });
 });

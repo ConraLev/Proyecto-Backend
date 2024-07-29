@@ -10,6 +10,7 @@ const configure = (app) => {
     if (!productController) {
         throw new Error('ProductController is not defined');
     }
+
     
     router.get('/mockingproducts', (req, res) => {
         const products = generateMockProducts();
@@ -24,7 +25,7 @@ const configure = (app) => {
         res.send('Prueba de logs realizada');
     });
 
-    router.get('/', productController.getAll.bind(productController));
+   
     router.post('/', productController.createOne.bind(productController));
     router.post('/create', productController.createProduct.bind(ProductController));
     router.get('/:id', productController.getById.bind(productController));

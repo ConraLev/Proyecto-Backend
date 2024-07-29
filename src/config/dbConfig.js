@@ -1,4 +1,6 @@
+const { MONGO_URL } = require('./config')
+
 module.exports = {
-    dbName: 'ecommerce',
-    mongoUrl: process.env.MONGO_URL
+    dbName: process.env.DBNAME,
+    mongoUrl: MONGO_URL
 }
