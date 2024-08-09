@@ -13,9 +13,9 @@ const transporter = nodemailer.createTransport({
 
 const sendMail = (to, subject, html) => {
   const mailOptions = {
-    from: 'eCommerce <recover@eCommerce.com>',
+    from: 'eCommerce <users@eCommerce.com>',
     to,
-    subject: 'Restablecer Contraseña',
+    subject,
     html,
   };
 

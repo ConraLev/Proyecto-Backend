@@ -60,6 +60,9 @@ class SessionController {
             if (!cart) {
                 return res.status(404).json({ error: 'Carrito no encontrado' });
             }
+
+            user.lastConnection = Date.now();
+            await user.save();
     
             req.session.user = {
                 email: user.email,
@@ -67,7 +70,7 @@ class SessionController {
                 lastName: user.lastName,
                 _id: user._id.toString(),
                 role: user.role,
-                cartId: cart._id.toString() 
+                cartId: cart._id.toString(),
             };
     
             const credentials = {
@@ -107,6 +110,10 @@ class SessionController {
     }
 
     async githubCallback(req, res, next) {
+
+        req.user.lastConnection = Date.now();
+        await req.user.save();
+
         try {
             req.session.user = {
                 email: req.user.email,

@@ -54,7 +54,7 @@ const httpServer = app.listen(config.PORT, (err) => {
         logger.error(`Error al iniciar el servidor: ${err.message}`);
         return;
     }
-    logger.info(`Servidor escuchando en http://localhost:${config.PORT}`);
+    // logger.info(`Servidor escuchando en http://localhost:${config.PORT}`);
 });
 
 const wsServer = initializeWsServer(httpServer);
@@ -71,7 +71,6 @@ initializeStrategyGit();
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 (async () => {
     const productDAO = await createProductDAO();

@@ -1,3 +1,4 @@
+const { DateModule } = require('@faker-js/faker');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -11,11 +12,16 @@ const userSchema = new mongoose.Schema({
     password: String,
     role: {
         type: String,
-        enum: ['usuario', 'admin', 'premium'],
-        default: 'usuario'
+        enum: ['user', 'admin', 'premium'],
+        default: 'user'
     },
     cartId: { type: String,
-         ref: 'Cart' }
+         ref: 'Cart' 
+    },
+    lastConnection: {type: Date,
+        default: Date.now
+    }
+    
 });
 
 const User = mongoose.model('User', userSchema);

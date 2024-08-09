@@ -22,14 +22,14 @@ module.exports = {
         if (req.user && req.user.role === 'admin') {
             return next();
         }
-        return res.status(403).send('Forbidden');
+        return res.status(403).send('Acceso Restringido - Unicamente para Admin');
     },
     
     userIsUser: (req, res, next) => {
         if (req.user && req.user.role === 'user') {
             return next();
         }
-        return res.status(403).send('Forbidden');
+        return res.status(403).send('Acceso Restringido');
     }
 
 }
