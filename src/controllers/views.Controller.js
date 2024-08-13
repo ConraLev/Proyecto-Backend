@@ -1,4 +1,5 @@
 const { createError } = require('../services/errors/errorHandler');
+const logger = require('../utils/logger');
 
 class ViewsController {
     constructor(ViewsService) {
@@ -13,7 +14,6 @@ class ViewsController {
                 title: 'Login',
                 styles: ['loginStyle'],
                 useWS: false,
-                scripts: ['index'],
                 isLoggedIn,
                 isNotLoggedIn: !isLoggedIn
             });
@@ -23,120 +23,12 @@ class ViewsController {
         }
     }
 
-    async renderResetPasswordPage(req, res, next) {
-        const { token } = req.query;
-    
-        try {
-            if (!token) {
-                return res.render('resetpassreq', {
-                    title: 'Reset Password',
-                    styles: ['resetPassStyle'],
-                    scripts: ['resetPassReq']
-                });
-            }
-    
-            return res.render('resetpassres', {
-                title: 'Reset Password',
-                styles: ['resetPassStyle'],
-                scripts: ['resetPassRes'],
-                token: token
-            });
-        } catch (error) {
-            console.error('Error al renderizar la página de reseteo de contraseña:', error);
-            next(error);
-        }
-    }
-        
-    
-
-    async renderRegisterPage(req, res, next) {
-        try {
-            res.render('register', {
-                title: 'Register',
-                styles: ['registerStyle'],
-                useWS: false
-            });
-        } catch (error) {
-            console.error('Error al renderizar la página de registro:', error);
-            next(error);
-        }
-    }
-
-    async renderProfilePage(req, res, next) {
-        try {
-            if (!req.session || !req.session.user) {
-                return res.redirect('/');
-            }
-
-            const userId = req.session.user._id;
-            const user = await this.service.findUserById(userId);
-
-            if (!user) {
-                throw createError('USER_NOT_FOUND');
-            }
-
-            res.render('profile', {
-                title: 'My profile',
-                user: user
-            });
-        } catch (error) {
-            console.error('Error al obtener y renderizar el perfil de usuario:', error);
-            next(error);
-        }
-    }
-
-    logout(req, res) {
-        req.session.destroy((err) => {
-            if (err) {
-                console.error('Error al cerrar sesión:', err);
-            }
-            res.redirect('/');
-        });
-    }
-
-    failRegister(_, res) {
-        res.send('Error al registrar el usuario');
-    }
-
-    async renderRealtimeProductsPage(_, res, next) {
-        try {
-            const products = await this.service.findAllProducts();
-            res.render('realtimeproducts', {
-                title: 'Lista Actualizacion',
-                products,
-                styles: ['style'],
-                useWS: true,
-                scripts: ['indexRealTime']
-            });
-        } catch (error) {
-            console.error('Error al obtener y renderizar los productos en tiempo real:', error);
-            next(error);
-        }
-    }
-
-    async renderChatPage(req, res, next) {
-        try {
-            const lastMessages = await this.service.findLastMessages();
-            res.render('chat', {
-                title: 'Chat',
-                styles: ['style'],
-                useWS: true,
-                useSweetAlert: true,
-                scripts: ['indexChat'],
-                lastMessages
-            });
-        } catch (error) {
-            console.error('Error al obtener y renderizar los últimos mensajes del chat:', error);
-            next(error);
-        }
-    }
-
     async renderProductsPage(req, res, next) {
         try {
             const isLoggedIn = !!req.session.user;
             const user = req.session.user || {};
             const cartId = req.session.user ? req.session.user.cartId : null;
-    
+        
             const limit = parseInt(req.query.limit) || 10;
             const page = parseInt(req.query.page) || 1;
             const sort = req.query.sort === 'desc' ? -1 : 1;
@@ -199,6 +91,117 @@ class ViewsController {
         }
     }
 
+    async renderProdAdminPage(req, res, next) {
+        try {
+            const products = await this.service.findAllProducts();
+            const productsPlain = products.map(product => product.toObject());
+    
+            res.render('productAdmin', {
+                title: 'Vista Productos Admin',
+                products: productsPlain, 
+                styles: ['style'],
+                useWS: true,
+                scripts: ['indexProdAd']
+            });
+        } catch (error) {
+            console.error('Error al obtener y renderizar los productos en tiempo real:', error);
+            next(error);
+        }
+    }
+
+    async renderRealtimeProductsPage(_, res, next) {
+        try {
+            const products = await this.service.findAllProducts();
+            res.render('realtimeproducts', {
+                title: 'Lista Actualizacion',
+                products,
+                styles: ['style'],
+                useWS: true,
+                scripts: ['indexRealTime']
+            });
+        } catch (error) {
+            console.error('Error al obtener y renderizar los productos en tiempo real:', error);
+            next(error);
+        }
+    }
+
+    async renderRegisterPage(req, res, next) {
+        try {
+            res.render('register', {
+                title: 'Register',
+                styles: ['registerStyle'],
+                useWS: false
+            });
+        } catch (error) {
+            console.error('Error al renderizar la página de registro:', error);
+            next(error);
+        }
+    }
+
+    async renderResetPasswordPage(req, res, next) {
+        const { token } = req.query;
+    
+        try {
+            if (!token) {
+                return res.render('resetpassreq', {
+                    title: 'Reset Password',
+                    styles: ['resetPassStyle'],
+                    scripts: ['resetPassReq']
+                });
+            }
+    
+            return res.render('resetpassres', {
+                title: 'Reset Password',
+                styles: ['resetPassStyle'],
+                scripts: ['resetPassRes'],
+                token: token
+            });
+        } catch (error) {
+            console.error('Error al renderizar la página de reseteo de contraseña:', error);
+            next(error);
+        }
+    }
+          
+    async renderProfilePage(req, res, next) {
+        try {
+            if (!req.session || !req.session.user) {
+                return res.redirect('/');
+            }
+
+            const userId = req.session.user._id;
+            const user = await this.service.findUserById(userId);
+
+            if (!user) {
+                throw createError('USER_NOT_FOUND');
+            }
+
+            res.render('profile', {
+                title: 'My profile',
+                user: user
+            });
+        } catch (error) {
+            console.error('Error al obtener y renderizar el perfil de usuario:', error);
+            next(error);
+        }
+    }
+
+    async renderChatPage(req, res, next) {
+        try {
+            const lastMessages = await this.service.findLastMessages();
+            res.render('chat', {
+                title: 'Chat',
+                styles: ['style'],
+                useWS: true,
+                useSweetAlert: true,
+                scripts: ['indexChat'],
+                lastMessages
+            });
+        } catch (error) {
+            console.error('Error al obtener y renderizar los últimos mensajes del chat:', error);
+            next(error);
+        }
+    }
+    
     async countDocuments(match) {
         return this.storage.countDocuments(match);
     }
@@ -207,6 +210,18 @@ class ViewsController {
         return this.storage.find(match, options);
     }
 
+    logout(req, res) {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error al cerrar sesión:', err);
+            }
+            res.redirect('/');
+        });
+    }
+
+    failRegister(_, res) {
+        res.send('Error al registrar el usuario');
+    }
 
 
 }

@@ -2,16 +2,17 @@
     {{#if isLoggedIn}}
     <div>
         <h1>Bienvenido {{user.role}} {{user.firstName}} {{user.lastName}}</h1>
+        <input type="hidden" id="cartId" value="{{cartId}}">
     </div>
     <div>
+        <button id="viewCartBtn" class="viewCartBtn">Ver Carrito</button>
+
         <form action="/logout" method="GET">
             <button id="logoutBtn" class="logoutBtn" type="submit">Logout</button>
         </form>
     </div>  
     {{/if}}
 </div>
-
-<input type="hidden" id="cartId" value="{{cartId}}"> 
 
 <div id="prodMasChat" class="prodMasChat">
     <div class="listaProd" id="productos">
@@ -43,7 +44,9 @@
 </div>
 
 <script>
-    const cartId = '{{cartId}}'; 
+    {{!-- const cartId = '{{cartId}}'; --}}
+    const cartId = document.querySelector('#cartId').value; 
+ 
 </script>
 
 

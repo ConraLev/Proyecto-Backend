@@ -1,0 +1,12 @@
+2024-08-09T20:16:43.521Z warn: ID de producto inválido recibido GETBYID: create
+2024-08-09T20:36:05.948Z error: Error en adminView: this.service.getAllProducts is not a function
+2024-08-09T21:24:57.742Z error: Error en adminView: this.service.getAll is not a function
+2024-08-09T21:33:45.955Z error: Error en adminView: this.service.getAll is not a function
+2024-08-09T21:34:11.358Z error: Error en adminView: this.storage.getAll is not a function
+2024-08-09T21:37:45.434Z error: Error en adminView: this.service.getAllProducts is not a function
+2024-08-09T21:38:13.304Z error: Error en adminView: this.storage.findAllProducts is not a function
+2024-08-10T15:53:31.922Z warn: Validación fallida al crear producto: [object Object]
+2024-08-10T15:53:31.925Z error: Error en createOne: No se completo todos los campos
+2024-08-10T16:04:52.057Z warn: Validación fallida al crear producto: [{"field":"price","message":"Price must be a number","type":"number"}]
+2024-08-10T16:04:52.059Z error: Error en createOne: No se completo todos los campos
+2024-08-10T16:08:41.249Z error: Error en createOne: products validation failed: id: Path `id` is required.

@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const generateMockProducts = require('../mocks/products.mocking');
 const logger = require('../utils/logger');
-const ProductController = require('../controllers/product.Controller');
+const { userIsAdmin } = require('../middlewares/auth.middleware');
 
 const configure = (app) => {
     const productController = app.get('productController');
+    const viewController = app.get('viewsController');
 
     if (!productController) {
         throw new Error('ProductController is not defined');
@@ -25,10 +26,8 @@ const configure = (app) => {
         res.send('Prueba de logs realizada');
     });
 
-    // router.get('/', productController.getAll.bind(productController));
-
-    router.post('/', productController.createOne.bind(productController));
-    router.post('/create', productController.createProduct.bind(ProductController));
+    router.get('/admin', userIsAdmin, viewController.renderProdAdminPage.bind(viewController));
+    router.post('/create', productController.createOne.bind(productController));
     router.get('/:id', productController.getById.bind(productController));
     router.put('/:id', productController.updateOne.bind(productController));
     router.delete('/:id', productController.deleteById.bind(productController));

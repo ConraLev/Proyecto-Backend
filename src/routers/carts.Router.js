@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { userIsUser } = require('../middlewares/auth.middleware');
+const {  userIsLoggedIn, ensureAuthenticated } = require('../middlewares/auth.middleware');
 const { CartController } = require('../controllers/cart.Controller'); 
 
 const configure = (app) => {
@@ -11,11 +11,15 @@ const configure = (app) => {
         throw new Error('CartController is not defined');
     }
 
-    router.get('/:id', cartController.getCartById.bind(cartController)); 
-    router.post('/:cid/purchase', userIsUser, cartController.purchase.bind(cartController));
-    router.post('/:cartId/item', cartController.addItemToCart.bind(cartController));
-    router.delete('/:cartId/item/:productId', cartController.removeItemFromCart.bind(cartController));
+    router.get('/:id', userIsLoggedIn, cartController.getCartById.bind(cartController)); 
+    router.get('/:id/json', userIsLoggedIn, cartController.getCartAsJson.bind(cartController));
+    router.post('/:cartId/purchase', ensureAuthenticated, cartController.purchase.bind(cartController));
+    router.post('/:cartId/item', ensureAuthenticated, cartController.addItemToCart.bind(cartController));
+    router.delete('/:cartId/item/:productId', cartController.deleteItemFromCart.bind(cartController));
     router.delete('/:cartId', cartController.clearCart.bind(cartController));
+
+
+
     app.use('/carts', router);
 };
 

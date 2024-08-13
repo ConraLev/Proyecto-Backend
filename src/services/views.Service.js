@@ -3,6 +3,10 @@ class ViewsService {
         this.storage = storage;
     }
 
+    async getAllProducts() {
+        return this.storage.getAll();
+    }
+
     countDocuments(match) {
         return this.storage.countDocuments(match);
     }

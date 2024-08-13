@@ -7,7 +7,6 @@ class MongoDAO {
     async init() {
         try {
             await mongoose.connect(mongoUrl, { dbName });
-            console.log('Connected to MongoDB');
         } catch (error) {
             console.error('Error connecting to MongoDB:', error);
             throw error;
@@ -23,14 +22,20 @@ class MongoDAO {
         }
     }
     
+   
     async addItem(cartId, item) {
         try {
             const cart = await CartModel.findById(cartId);
-        if (cart) {
-                cart.items.push(item);
+            if (cart) {
+                if (!cart.products) { 
+                    cart.products = [];
+                }
+                cart.products.push(item);
                 await cart.save();
+                return cart;
+            } else {
+                throw new Error('Cart not found');
             }
-            return cart;
         } catch (error) {
             console.error('Error adding item to cart:', error);
             throw error;

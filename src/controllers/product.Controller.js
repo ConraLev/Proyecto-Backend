@@ -5,11 +5,23 @@ const { CustomError } = require('../services/errors/customError');
 const { ErrorCodes } = require('../services/errors/errorCodes');
 const  Product  = require('../dao/models/products.model');
 const  User  = require('../dao/models/user.model');
+const sendMail = require('../utils/mailer');
 const logger = require('../utils/logger'); 
 
 class ProductController {
     constructor(ProductService) {
         this.service = ProductService;
+    }
+
+
+    async adminView(req, res, next) {
+        try {
+            const products = await this.service.getAllProducts();
+            res.render('productAdmin', { products });
+        } catch (error) {
+            logger.error(`Error en adminView: ${error.message}`);
+            next(error);
+        }
     }
 
     async getAll(req, res, next) {
@@ -71,8 +83,17 @@ class ProductController {
                 return next(new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado'));
             }
 
-            if (userRole === 'admin' || (userRole === 'premium' && product.owner === userId)) {
+            if (userRole === 'admin' || (userRole === 'premium' && product.owner === user.email)) {
                 await this.service.deleteById(productId);
+
+                if (userRole === 'premium' && product.owner === user.email) {
+                    await sendMail(
+                        user.email,
+                        'Producto Eliminado',
+                        `El producto ${product.title} con ID ${productId} ha sido eliminado.`
+                    );
+                }
+
                 res.json({ message: `Producto con ID ${productId} eliminado correctamente` });
             } else {
                 logger.warn(`Usuario no autorizado para eliminar producto con ID: ${productId}`);
@@ -86,39 +107,54 @@ class ProductController {
 
     async createOne(req, res, next) {
         const user = req.session.user;
-
+    
         if (!user) {
             return res.status(401).json({ error: 'Usuario no autenticado' });
         }
-
+    
         const { title, description, price, thumbnail, code, stock, category } = req.body;
         const userId = user._id;
-
+    
         try {
             const user = await User.findById(userId);
-
-            if (!user || user.role !== 'premium') {
-                return res.status(403).json({ error: 'Solo los usuarios premium pueden crear productos' });
+    
+            if (!user || (user.role !== 'premium' && user.role !== 'admin')) {
+                return res.status(403).json({ error: 'Solo los usuarios premium o administradores pueden crear productos' });
             }
 
-            const validationErrors = validateProduct({ title, description, price, thumbnail, code, stock, category });
-
+            const priceNumber = Number(price);
+    
+            const validationErrors = validateProduct({ 
+                title, 
+                description, 
+                price: priceNumber, 
+                thumbnail, 
+                code, 
+                stock, 
+                category 
+            });
+    
             if (validationErrors.length > 0) {
-                logger.warn(`Validación fallida al crear producto: ${validationErrors}`);
+                console.log('Errores de validación:', validationErrors);
+                logger.warn(`Validación fallida al crear producto: ${JSON.stringify(validationErrors)}`);
                 throw createError('MISSING_REQUIRED_FIELDS', validationErrors);
             }
-
+    
+            const lastProduct = await Product.findOne().sort({ id: -1 }).exec();
+            const nextId = lastProduct ? lastProduct.id + 1 : 1;
+    
             const newProduct = new Product({
+                id: nextId,
                 title,
                 description,
-                price,
+                price: priceNumber,
                 thumbnail,
                 code,
                 stock,
                 category,
                 owner: user.email
             });
-
+    
             await newProduct.save();
             res.status(201).json(newProduct);
         } catch (error) {
@@ -126,39 +162,7 @@ class ProductController {
             next(error);
         }
     }
-
-    async createProduct(req, res, next) {
-        const user = req.session.user;
-
-        if (!user) {
-            return res.status(401).json({ error: 'Usuario no autenticado' });
-        }
-
-        const { name, price, description } = req.body;
-        const userId = user._id;
-
-        try {
-            const user = await User.findById(userId);
-
-            if (!user || user.role !== 'premium') {
-                return res.status(403).json({ error: 'Solo los usuarios premium pueden crear productos' });
-            }
-
-            const newProduct = new Product({
-                name,
-                price,
-                description,
-                owner: user.email
-            });
-
-            await newProduct.save();
-            res.status(201).json(newProduct);
-        } catch (error) {
-            logger.error('Error en createProduct:', error.message);
-            next(error);
-        }
-    }
-
+    
     async updateOne(req, res, next) {
         const productId = req.params.id;
         const updatedFields = req.body;

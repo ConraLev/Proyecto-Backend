@@ -1,12 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const cartIdElement = document.querySelector('#cartId');
     const cartId = cartIdElement ? cartIdElement.value : null;
-    const addToCartButtons = document.querySelectorAll('.addToCard'); 
+    const addToCartButtons = document.querySelectorAll('.addToCard');
+     
 
     addToCartButtons.forEach(button => {
         button.addEventListener('click', async (event) => {
-            console.log('Button clicked'); 
-            console.log(`El carrito es ${cartId}`);
             const productId = event.target.getAttribute('data-product-id');
 
             try {
@@ -26,3 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+document.getElementById('viewCartBtn').addEventListener('click', function() {
+    var cartId = document.getElementById('cartId').value;
+    if (cartId) {
+        window.location.href = '/carts/' + cartId;
+    } else {
+        alert('No se encontró el ID del carrito.');
+    }
+});

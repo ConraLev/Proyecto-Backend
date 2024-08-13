@@ -5,7 +5,6 @@ const { isValidPassword } = require('../utils/hashing');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const sendMail = require('../utils/mailer');
-const path = require('path');
 
 const adminUser = { email: 'adminCoder@coder.com', password: 'adminCod3r123', role: 'admin', firstName: 'Admin', lastName: 'Coder' };
 
@@ -33,59 +32,86 @@ class SessionController {
         }
     }
 
-
     async login(req, res, next) {
-        const { email, password } = req.body;
-    
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Datos inválidos' });
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Datos inválidos' });
+    }
+
+    if (email === adminUser.email && password === adminUser.password) {
+        req.session.user = adminUser;
+        return res.redirect('/products');
+    }
+
+    try {
+        const user = await this.service.findUserByEmail(email);
+        if (!user) {
+            return res.status(404).json({ error: 'Correo no registrado' });
         }
-    
-        if (email === adminUser.email && password === adminUser.password) {
-            req.session.user = adminUser;
-            return res.redirect('/products');
+
+        if (!isValidPassword(password, user.password)) {
+            return res.status(400).json({ error: 'Contraseña incorrecta' });
         }
-    
+
+        const cart = await Cart.findOne({ userId: user.id });
+        if (!cart) {
+            return res.status(404).json({ error: 'Carrito no encontrado' });
+        }
+
+        user.lastConnection = Date.now();
+        await user.save();
+
+        req.session.user = {
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            _id: user._id.toString(),
+            role: user.role,
+            cartId: cart._id.toString()
+        };
+
+        req.session.cartId = cart._id.toString();  
+
+        const credentials = {
+            email: user.email,
+            _id: user._id.toString(),
+            role: user.role
+        };
+        const token = generateToken(credentials);
+        res.redirect('/products');
+    } catch (error) {
+        console.error('Error en login:', error);
+        next(error);
+    }
+    }
+
+    async githubCallback(req, res, next) {
+        req.user.lastConnection = Date.now();
+        await req.user.save();
+        
         try {
-            const user = await this.service.findUserByEmail(email);
-            if (!user) {
-                return res.status(404).json({ error: 'Correo no registrado' });
-            }
-    
-            if (!isValidPassword(password, user.password)) {
-                return res.status(400).json({ error: 'Contraseña incorrecta' });
-            }
-    
-            const cart = await Cart.findOne({ userId: user._id });
+            const cart = await Cart.findOne({ userId: req.user._id });
+
             if (!cart) {
                 return res.status(404).json({ error: 'Carrito no encontrado' });
             }
-
-            user.lastConnection = Date.now();
-            await user.save();
-    
+            
             req.session.user = {
-                email: user.email,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                _id: user._id.toString(),
-                role: user.role,
-                cartId: cart._id.toString(),
+                email: req.user.email,
+                firstName: req.user.firstName,
+                lastName: req.user.lastName,
+                _id: req.user._id.toString(),
+                role: req.user.role,
+                cartId: cart._id.toString()
             };
-    
-            const credentials = {
-                email: user.email,
-                _id: user._id.toString(),
-                role: user.role
-            };
-            const token = generateToken(credentials);
             res.redirect('/products');
         } catch (error) {
-            console.error('Error en login:', error);
+            console.error('Error en el callback de GitHub:', error);
             next(error);
         }
     }
-    
+
     async register(req, res, next) {
         const { email, firstName, lastName, _id, role } = req.user;
         req.session.user = { email, firstName, lastName, _id: _id.toString(), role };
@@ -104,66 +130,39 @@ class SessionController {
         }
     }
     
-
-    failRegister(_, res) {
-        res.send('Error al registrar el usuario');
-    }
-
-    async githubCallback(req, res, next) {
-
-        req.user.lastConnection = Date.now();
-        await req.user.save();
-
-        try {
-            req.session.user = {
-                email: req.user.email,
-                firstName: req.user.firstName,
-                lastName: req.user.lastName,
-                _id: req.user._id.toString(),
-                role: req.user.role
-            };
-            res.redirect('/products');
-        } catch (error) {
-            console.error('Error en el callback de GitHub:', error);
-            next(error);
-        }
-    }
-
-
     async requestResetPassword(req, res, next) {
         const { email } = req.body;
-    
+        
         if (!email) {
             return res.status(400).json({ error: 'Email es requerido' });
         }
-    
+        
         try {
             const user = await this.service.findUserByEmail(email);
             if (!user) {
                 return res.status(404).json({ error: 'Usuario no encontrado' });
             }
-    
+            
             const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    
+            
             const resetLink = `http://localhost:${process.env.PORT}/reset_password?token=${token}`;
             await sendMail(email, 'Restablecer Contraseña', `<a href="${resetLink}">Restablecer Contraseña</a>`);
             
             return res.json({ message: 'Enlace de restablecimiento de contraseña enviado a tu correo electrónico' });
-    
+            
         } catch (error) {
             console.error('Error al generar el enlace de restablecimiento de contraseña:', error);
             next(error);
         }
     }
     
-
     async resetPassword(req, res, next) {
         const { token, newPassword } = req.body;
-            
+        
         if (!token || !newPassword) {
             return res.status(400).json({ error: 'Datos inválidos' });
         }
-            
+        
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const user = await User.findById(decoded.userId);
@@ -189,20 +188,23 @@ class SessionController {
             return res.status(500).json({ error: 'Error al restablecer la contraseña' });
         }
     }
-            
-
+    
+    failRegister(_, res) {
+        res.send('Error al registrar el usuario');
+    }
+    
     renderResetPasswordPage(req, res, next) {
         const { token } = req.query;
         if (!token) {
             return res.status(400).send('Token es requerido');
         }
-
+        
         res.render(('resetpassres', {
             title: 'Restablecer Contraseña',
             styles: ['resetPassStyle'],
             scripts: ['resetPassRes']
         }), { token });
-
+        
     }
 }
 
