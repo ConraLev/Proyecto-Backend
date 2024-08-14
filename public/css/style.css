@@ -4,30 +4,6 @@ body{
     background: linear-gradient(0deg, rgba(39,55,77,1) 0%, rgba(82,109,130,1) 10%, rgba(157,178,191,1) 30%, rgba(221,230,237,1) 100%);
 }
 
-#productos{
-    background-color: rgb(245, 35, 35);
-    margin: 20px;
-    padding: 10px;
-    color: white;
-    text-shadow: 3px 3px 5px black;
-    border-bottom-left-radius: 10px;
-    border-top-right-radius: 10px;
-    box-shadow: 8px 8px 10px black;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5vh;
-    font-size: 2vh;
-    justify-content: center;
-}
-
-#productos div{
-    background-color: black;
-    padding: 20px;
-    max-width: 45vh;
-    min-width: 45vh;
-}
-
-
 .chat{
     justify-content: center;
     text-align: center;
@@ -42,6 +18,31 @@ body{
 }
 
 
+#productos {
+    margin: 20px;
+    padding: 10px;
+    color: white;
+    text-shadow: 3px 3px 5px black;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5vh;
+    font-size: 2vh;
+    justify-content: center;
+    position: relative;
+    padding-bottom: 10vh;
+}
+
+#productos div{
+    background-color: rgba(39, 55, 77, 0.747);
+    padding: 20px;
+    max-width: 45vh;
+    min-width: 45vh;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: 3px 3px 5px  #006eff;
+    text-shadow: 5px 5px 8px rgb(0, 0, 255);
+}
+
 .formProduct{
     background-color: green;
     align-content: right;
@@ -53,37 +54,104 @@ body{
 }
 
 
-
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 3vh;
-    background-color: aqua;
+    background-color: rgb(39,55,77);
+    text-align: center;
+    border-radius: 10px;
+    font-size: 2.5vh;
+    opacity: 0.8;
+    box-shadow: 5px 5px 5px #000000;
 }
 
-.header h1{
-    padding-left: 2vh;
+.header h2{
+    color: #f8f7f7;
+    text-shadow: 5px 5px 8px rgb(0, 0, 255)
 }
 
 .headerBtns{
     display: flex;
+    gap: 1vh;
+
 }
 
 
 .viewCartBtn, .logoutBtn {
     font-family: 'Poppins', sans-serif;
-    width: 15vh; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18vh;  
     height: 6vh; 
     font-size: 2.5vh;
     margin-left: 1vh;
-    margin-right: 1vh;
+    margin-right: 2vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 255, 0.719);
+    gap: 1vh;
 }
 
-.viewCartBtn{
+.viewCartBtn i, .logoutBtn i {
+    margin-right: 0.5vh;
+}
+
+.logoutBtn{
+    margin-top: 1.5vh;
+}
+
+.viewCartBtn {
     font-size: 2vh;
+    margin-right: 3vh;
 }
 
-.pagination{
-    text-align: center;
+
+
+.listaProductos {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center; 
+    padding: 20px;
+    max-width: 45vh;
+    min-width: 45vh;
+    background-color: black;
 }
+
+.addToCard {
+    margin-top: 2vh;
+    width: fit-content;
+    padding: 1vh 2vh;
+    background-color: #006eff;
+    border: none;
+    cursor: pointer;
+    font-size: 2vh;
+    color: white;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 2vh; 
+    width: 100%;
+    height: 5vh;
+}
+
+#BtnAtras, #BtnSig {
+    font-family: 'Poppins', sans-serif;
+    padding: 1vh 2vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 0 1vh; 
+}
+
+

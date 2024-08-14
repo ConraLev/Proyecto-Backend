@@ -1,0 +1,123 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: rgb(39,55,77);
+    background: linear-gradient(0deg, rgba(39,55,77,1) 0%, rgba(82,109,130,1) 10%, rgba(157,178,191,1) 30%, rgba(221,230,237,1) 100%);
+    min-height: 100vh; 
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3vh;
+    background-color: rgb(39,55,77);
+    text-align: center;
+    border-radius: 10px;
+    font-size: 2.5vh;
+    opacity: 0.8;
+    box-shadow: 5px 5px 5px #000000;
+}
+
+.header h2 {
+    color: #f8f7f7;
+    text-shadow: 5px 5px 8px rgb(0, 0, 255);
+}
+
+.headerBtns {
+    display: flex;
+}
+
+.viewCartBtn, .logoutBtn {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18vh;  
+    height: 6vh; 
+    font-size: 2.5vh;
+    margin-left: 1vh;
+    margin-right: 1vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px black;
+}
+
+.viewCartBtn i, .logoutBtn i {
+    margin-right: 0.5vh; 
+}
+
+.viewCartBtn {
+    font-size: 2vh;
+}
+
+.logoutBtn{
+    margin-top: 1.5vh;
+}
+
+
+.listaProductos {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    padding: 20px;
+    max-width: 90vh;
+    margin: auto;
+}
+
+.cart-summary {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px black;
+    margin-bottom: 20px;
+}
+
+.cart-items {
+    width: 100%;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px black;
+    width: 100%;
+}
+
+.cart-item-info {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 2vh;
+}
+
+.remove-item-btn {
+    background-color: red;
+    border: none;
+    padding: 10px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.purchase-btn {
+    background-color: #28a745;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}

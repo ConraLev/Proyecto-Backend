@@ -3,10 +3,10 @@
         <h2>Bienvenido <br> {{user.role}} {{user.firstName}} {{user.lastName}}</h2>
         <input type="hidden" id="cartId" value="{{cartId}}">
         <div id="headerBtns">
-            <button id="viewCartBtn" class="viewCartBtn">Ver Carrito</button>
+            <button id="viewCartBtn" class="viewCartBtn"><i class="fa-solid fa-cart-shopping"></i>Ver Carrito</button>
 
             <form action="/logout" method="GET">
-            <button id="logoutBtn" class="logoutBtn" type="submit">Logout</button>
+            <button id="logoutBtn" class="logoutBtn" type="submit"><i class="fa-solid fa-right-from-bracket"></i>Logout</button>
             </form>
         </div>  
     </div>

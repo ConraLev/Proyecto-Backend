@@ -62,7 +62,7 @@ class CartController {
                     totalPrice
                 },
                 cartId: cartId,
-                styles: ['style'],
+                styles: ['cartStyle'],
                 scripts: ['indexCart'],
                 isLoggedIn: isLoggedIn,
                 user: req.session.user,
