@@ -153,7 +153,7 @@ class SessionController {
             
             const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
             
-            const resetLink = `../${process.env.CALLBACKURL}/reset_password?token=${token}`;
+            const resetLink = `http://localhost:${process.env.PORT}/reset_password?token=${token}`;
             await sendMail(email, 'Restablecer Contraseña', `<a href="${resetLink}">Restablecer Contraseña</a>`);
             
             return res.json({ message: 'Enlace de restablecimiento de contraseña enviado a tu correo electrónico' });

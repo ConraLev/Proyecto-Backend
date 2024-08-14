@@ -45,3 +45,5 @@
 2024-08-14T21:13:38.936Z info: Email enviado a conrado182n94@gmail.com sobre la eliminación del producto 18
 2024-08-14T21:13:45.409Z info: Email enviado a conrado182n94@gmail.com sobre la eliminación del producto 17
 2024-08-14T21:13:50.527Z info: Email enviado a conrado182n94@gmail.com sobre la eliminación del producto 16
+2024-08-14T21:53:07.388Z warn: ID de producto inválido recibido UPDATE: 50
+2024-08-14T21:53:09.488Z warn: Usuario no autorizado para eliminar producto con ID: 50
