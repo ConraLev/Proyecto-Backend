@@ -54,24 +54,34 @@ body{
 
 
 
-.header{
+.header {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
-    padding-top: 3vh;
-    padding-bottom: 5vh;
+    padding: 3vh;
+    background-color: aqua;
 }
 
 .header h1{
     padding-left: 2vh;
 }
 
-.logoutBtn{
+.headerBtns{
+    display: flex;
+}
+
+
+.viewCartBtn, .logoutBtn {
     font-family: 'Poppins', sans-serif;
-    width: 20vh;
-    height: 10vh;
+    width: 15vh; 
+    height: 6vh; 
     font-size: 2.5vh;
-    
+    margin-left: 1vh;
+    margin-right: 1vh;
+}
+
+.viewCartBtn{
+    font-size: 2vh;
 }
 
 .pagination{
