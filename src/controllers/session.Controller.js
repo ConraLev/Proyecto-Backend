@@ -86,17 +86,52 @@ class SessionController {
     }
     }
 
-    async githubCallback(req, res, next) {
-        req.user.lastConnection = Date.now();
-        await req.user.save();
+    // async githubCallback(req, res, next) {
+    //     req.user.lastConnection = Date.now();
+    //     await req.user.save();
         
-        try {
-            const cart = await Cart.findOne({ userId: req.user._id });
+    //     try {
+    //         const cart = await Cart.findOne({ userId: req.user._id });
 
+    //         if (!cart) {
+    //             return res.status(404).json({ error: 'Carrito no encontrado' });
+    //         }
+            
+    //         req.session.user = {
+    //             email: req.user.email,
+    //             firstName: req.user.firstName,
+    //             lastName: req.user.lastName,
+    //             _id: req.user._id.toString(),
+    //             role: req.user.role,
+    //             cartId: cart._id.toString()
+    //         };
+
+    //         const credentials = {
+    //             email: user.email,
+    //             _id: user._id.toString(),
+    //             role: user.role
+    //         };
+    //         const token = generateToken(credentials);
+
+
+    //         res.redirect('/products');
+    //     } catch (error) {
+    //         console.error('Error en el callback de GitHub:', error);
+    //         next(error);
+    //     }
+    // }
+
+    async githubCallback(req, res, next) {
+        try {
+            req.user.lastConnection = Date.now();
+            await req.user.save();
+            
+            const cart = await Cart.findOne({ userId: req.user._id });
+    
             if (!cart) {
                 return res.status(404).json({ error: 'Carrito no encontrado' });
             }
-            
+    
             req.session.user = {
                 email: req.user.email,
                 firstName: req.user.firstName,
@@ -105,21 +140,21 @@ class SessionController {
                 role: req.user.role,
                 cartId: cart._id.toString()
             };
-
+    
             const credentials = {
-                email: user.email,
-                _id: user._id.toString(),
-                role: user.role
+                email: req.user.email,
+                _id: req.user._id.toString(),
+                role: req.user.role
             };
             const token = generateToken(credentials);
-
-            
+    
             res.redirect('/products');
         } catch (error) {
             console.error('Error en el callback de GitHub:', error);
             next(error);
         }
     }
+    
 
     async register(req, res, next) {
         const { email, firstName, lastName, _id, role } = req.user;

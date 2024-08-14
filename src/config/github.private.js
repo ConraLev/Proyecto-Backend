@@ -1,5 +1,3 @@
-// const isProduction = process.env.ENV === 'prod';
-
 module.exports = {
     appId: '886871',
     clientID: 'Iv1.e9bc8072805cd4e7',
