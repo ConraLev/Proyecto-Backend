@@ -20,4 +20,4 @@ const initilizeStrategy = () => {
     }))
 }
 
-// module.exports = initilizeStrategy
+module.exports = initilizeStrategy

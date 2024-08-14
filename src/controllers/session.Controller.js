@@ -105,6 +105,15 @@ class SessionController {
                 role: req.user.role,
                 cartId: cart._id.toString()
             };
+
+            const credentials = {
+                email: user.email,
+                _id: user._id.toString(),
+                role: user.role
+            };
+            const token = generateToken(credentials);
+
+            
             res.redirect('/products');
         } catch (error) {
             console.error('Error en el callback de GitHub:', error);
