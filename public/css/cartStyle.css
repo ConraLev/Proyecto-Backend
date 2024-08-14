@@ -19,14 +19,17 @@ body {
     box-shadow: 5px 5px 5px #000000;
 }
 
-.header h2 {
+.header h2{
     color: #f8f7f7;
-    text-shadow: 5px 5px 8px rgb(0, 0, 255);
+    text-shadow: 5px 5px 8px rgb(0, 0, 255)
 }
 
-.headerBtns {
+.headerBtns{
     display: flex;
+    gap: 1vh;
+
 }
+
 
 .viewCartBtn, .logoutBtn {
     font-family: 'Poppins', sans-serif;
@@ -37,21 +40,27 @@ body {
     height: 6vh; 
     font-size: 2.5vh;
     margin-left: 1vh;
-    margin-right: 1vh;
+    margin-right: 2vh;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    box-shadow: 2px 2px 5px black;
+    box-shadow: 5px 5px 5px rgba(0, 0, 255, 0.719);
+    gap: 1vh;
 }
 
 .viewCartBtn i, .logoutBtn i {
-    margin-right: 0.5vh; 
+    margin-right: 0.5vh;
+}
+
+.logoutBtn{
+    margin-top: 1.5vh;
 }
 
 .viewCartBtn {
     font-size: 2vh;
+    margin-right: 3vh;
 }
 
 .logoutBtn{
