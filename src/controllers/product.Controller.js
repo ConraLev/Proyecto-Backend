@@ -59,52 +59,6 @@ class ProductController {
         }
     }
 
-    // async deleteById(req, res, next) {
-    //     const productId = req.params.id;
-    //     const user = req.session.user;
-
-    //     if (!user) {
-    //         return res.status(401).json({ error: 'Usuario no autenticado' });
-    //     }
-
-    //     const userId = user._id;
-    //     const userRole = user.role;
-
-    //     if (!mongoose.Types.ObjectId.isValid(productId)) {
-    //         logger.warn(`ID de producto inválido recibido DELETEBYID: ${productId}`);
-    //         return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
-    //     }
-
-    //     try {
-    //         const product = await Product.findById(productId);
-
-    //         if (!product) {
-    //             logger.warn(`Producto no encontrado para ID: ${productId}`);
-    //             return next(new CustomError(ErrorCodes.PRODUCT_NOT_FOUND, 'Producto no encontrado'));
-    //         }
-
-    //         if (userRole === 'admin' || (userRole === 'premium' && product.owner === user.email)) {
-    //             await this.service.deleteById(productId);
-
-    //             if (userRole === 'premium' && product.owner === user.email) {
-    //                 await sendMail(
-    //                     user.email,
-    //                     'Producto Eliminado',
-    //                     `El producto ${product.title} con ID ${productId} ha sido eliminado.`
-    //                 );
-    //             }
-
-    //             res.json({ message: `Producto con ID ${productId} eliminado correctamente` });
-    //         } else {
-    //             logger.warn(`Usuario no autorizado para eliminar producto con ID: ${productId}`);
-    //             return next(new CustomError(ErrorCodes.UNAUTHORIZED, 'No tienes permiso para eliminar este producto'));
-    //         }
-    //     } catch (error) {
-    //         logger.error(`Error en deleteById: ${error.message}`);
-    //         next(error);
-    //     }
-    // }
-
     async deleteById(req, res, next) {
         const productId = req.params.id;
         const user = req.session.user;
@@ -115,13 +69,8 @@ class ProductController {
     
         const userRole = user.role;
     
-        // if (!mongoose.Types.ObjectId.isValid(productId)) {
-        //     logger.warn(`ID de producto inválido recibido DELETEBYID: ${productId}`);
-        //     return next(new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido'));
-        // }
-    
         try {
-            const product = await Product.findById(productId);
+            const product = await Product.findOne({ id: parseInt(productId) });
     
             if (!product) {
                 logger.warn(`Producto no encontrado para ID: ${productId}`);
@@ -131,12 +80,19 @@ class ProductController {
             if (userRole === 'admin' || (userRole === 'premium' && product.owner === user.email)) {
                 await this.service.deleteById(productId);
     
-                if (userRole === 'premium' && product.owner === user.email) {
-                    await sendMail(
-                        user.email,
-                        'Producto Eliminado',
-                        `El producto ${product.title} con ID ${productId} ha sido eliminado.`
-                    );
+                const owner = await User.findOne({ email: product.owner });
+    
+                if (owner && owner.role === 'premium') {
+                    try {
+                        await sendMail(
+                            product.owner,  
+                            'Producto Eliminado',
+                            `El producto ${product.title} con ID ${productId} ha sido eliminado.`
+                        );
+                        logger.info(`Email enviado a ${product.owner} sobre la eliminación del producto ${productId}`);
+                    } catch (mailError) {
+                        logger.error(`Error al enviar el email: ${mailError.message}`);
+                    }
                 }
     
                 res.json({ message: `Producto con ID ${productId} eliminado correctamente` });
@@ -148,10 +104,7 @@ class ProductController {
             logger.error(`Error en deleteById: ${error.message}`);
             next(error);
         }
-    }
-    
-
-    
+    } 
 
     async createOne(req, res, next) {
         const user = req.session.user;

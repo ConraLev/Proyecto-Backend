@@ -17,3 +17,23 @@
 2024-08-14T02:50:58.440Z warn: ID de producto inválido recibido DELETEBYID: 20
 2024-08-14T02:51:18.729Z warn: ID de producto inválido recibido DELETEBYID: 20
 2024-08-14T02:53:11.886Z error: Error en deleteById: Cast to ObjectId failed for value "20" (type string) at path "_id" for model "products"
+2024-08-14T16:44:50.843Z error: Error en deleteById: Cast to ObjectId failed for value "16" (type string) at path "_id" for model "products"
+2024-08-14T16:52:01.083Z error: Error en deleteById: Cast to ObjectId failed for value "20" (type string) at path "_id" for model "products"
+2024-08-14T16:54:21.762Z error: Error en deleteById: Cast to ObjectId failed for value "20" (type string) at path "_id" for model "products"
+2024-08-14T16:55:03.201Z error: Error en deleteById: Cast to ObjectId failed for value "20" (type string) at path "_id" for model "products"
+2024-08-14T17:05:27.837Z error: Error en deleteById: Cast to ObjectId failed for value "{ id: 16 }" (type Object) at path "_id" for model "products"
+2024-08-14T17:07:26.764Z error: Error en deleteById: Cast to ObjectId failed for value "{ productId: '16' }" (type Object) at path "_id" for model "products"
+2024-08-14T17:07:57.675Z error: Error en deleteById: Parameter "filter" to findOne() must be an object, got "16" (type string)
+2024-08-14T17:08:28.752Z error: Error en deleteById: Product.findByOne is not a function
+2024-08-14T17:08:47.121Z error: Error en deleteById: undefined
+2024-08-14T17:10:32.617Z error: Error en deleteById: undefined
+2024-08-14T17:16:22.940Z error: Error en deleteById: Product is not defined
+2024-08-14T17:19:35.689Z error: Error en deleteById: this.storage.deleteOne is not a function
+2024-08-14T18:09:33.241Z error: Error en deleteById: this.storage.deleteOne is not a function
+2024-08-14T18:10:25.783Z error: Error en deleteById: Cast to Number failed for value "{ id: 16 }" (type Object) at path "id" for model "products"
+2024-08-14T18:12:30.817Z error: Error en deleteById: Cast to Number failed for value "{ id: 16 }" (type Object) at path "id" for model "products"
+2024-08-14T18:29:55.218Z error: Error en createOne: products validation failed: category: Path `category` is required.
+2024-08-14T18:41:02.846Z warn: Producto no encontrado para ID: 17
+2024-08-14T18:47:35.516Z info: Email enviado a conrado182n94@gmail.com sobre la eliminación del producto 18
+2024-08-14T19:02:46.785Z info: Email enviado a conrado182n94@gmail.com sobre la eliminación del producto 24
+2024-08-14T19:03:06.869Z info: Email enviado a conrado182n94@gmail.com sobre la eliminación del producto 23

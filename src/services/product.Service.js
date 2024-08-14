@@ -26,18 +26,14 @@ class ProductService {
         }
     }
 
-    async deleteById(id) {
-        try {
-            const objectId = this.toObjectId(id);
-            if (!objectId) {
-                throw new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID inválido');
-            }
-            await this.storage.deleteById(objectId);
-        } catch (error) {
-            throw error;
+    async deleteById(productId) {
+        if (!isNaN(productId)) {
+            return await this.storage.deleteById(parseInt(productId));
+        } else {
+            throw new CustomError(ErrorCodes.INVALID_TYPES_ERROR, 'ID de producto inválido');
         }
     }
-
+    
     async createOne({ title, description, price, thumbnail, code, stock, category }) {
         try {
             if (!title || !description || !price || !thumbnail || !code || !stock || !category) {

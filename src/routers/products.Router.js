@@ -26,7 +26,7 @@ const configure = (app) => {
         res.send('Prueba de logs realizada');
     });
 
-    router.get('/admin', /* userIsAdmin, */ viewController.renderProdAdminPage.bind(viewController));
+    router.get('/admin', userIsAdmin, viewController.renderProdAdminPage.bind(viewController));
     router.get('/admin/json', productController.getProductsJson.bind(productController));
     router.post('/create', productController.createOne.bind(productController));
     router.get('/:id', productController.getById.bind(productController));

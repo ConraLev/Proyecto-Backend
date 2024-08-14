@@ -37,6 +37,7 @@ document.getElementById('btnBorrar').addEventListener('click', async function(ev
     event.preventDefault();
     const productId = document.getElementById('DelProductId').value;
 
+
     try {
         const response = await fetch(`/products/${productId}`, {
             method: 'DELETE',
