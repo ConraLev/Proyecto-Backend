@@ -6,7 +6,7 @@
 // }
 
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'prod';
 
 module.exports = {
     appId: '886871',
