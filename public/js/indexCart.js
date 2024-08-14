@@ -93,7 +93,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     const result = await response.json();
                     console.log('Compra realizada con éxito:', result);
-                    window.location.href = '/products';
+                    await Swal.fire({
+                        icon: 'success',
+                        title: '¡Gracias por su compra!',
+                        text: 'Serás redirigido a los productos en breve.',
+                        timer: 3000, 
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
+                    setTimeout(() => {
+                        window.location.href = '/products';
+                    }, 2500);  
                 } else {
                     const errorText = await response.text(); 
                     console.error('Error al realizar la compra:', errorText);
@@ -102,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error al realizar la solicitud de compra:', error);
             }
         });
-
     }
 
     function calculateTotal(products) {
@@ -111,5 +120,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateCartView();
 });
-
-

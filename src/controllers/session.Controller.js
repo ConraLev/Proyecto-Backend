@@ -119,10 +119,11 @@ class SessionController {
         try {
             const newCart = new Cart({ userId: _id, items: [] });
             const savedCart = await newCart.save();
-    
+
             await User.findByIdAndUpdate(_id, { cartId: savedCart._id });
-    
-            req.session.cartId = savedCart._id.toString(); 
+            
+            req.session.user = { cartId: newCart._id.toString() } 
+
             res.redirect('/products');
         } catch (error) {
             console.error('Error al registrar usuario y/o carrito:', error);

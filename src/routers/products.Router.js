@@ -12,7 +12,7 @@ const configure = (app) => {
         throw new Error('ProductController is not defined');
     }
 
-    
+
     router.get('/mockingproducts', (req, res) => {
         const products = generateMockProducts();
         res.json(products);
@@ -26,12 +26,13 @@ const configure = (app) => {
         res.send('Prueba de logs realizada');
     });
 
-    router.get('/admin', userIsAdmin, viewController.renderProdAdminPage.bind(viewController));
+    router.get('/admin', /* userIsAdmin, */ viewController.renderProdAdminPage.bind(viewController));
+    router.get('/admin/json', productController.getProductsJson.bind(productController));
     router.post('/create', productController.createOne.bind(productController));
     router.get('/:id', productController.getById.bind(productController));
     router.put('/:id', productController.updateOne.bind(productController));
     router.delete('/:id', productController.deleteById.bind(productController));
-
+    
     app.use('/products', router);
 };
 

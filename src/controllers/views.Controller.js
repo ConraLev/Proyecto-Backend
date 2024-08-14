@@ -83,7 +83,8 @@ class ViewsController {
                 prevLink,
                 nextLink,
                 isLoggedIn,
-                isNotLoggedIn: !isLoggedIn
+                isNotLoggedIn: !isLoggedIn,
+                useSweetAlert: true
             });
         } catch (error) {
             console.error('Error al obtener y renderizar la página de productos:', error);

@@ -10,3 +10,10 @@
 2024-08-10T16:04:52.057Z warn: Validación fallida al crear producto: [{"field":"price","message":"Price must be a number","type":"number"}]
 2024-08-10T16:04:52.059Z error: Error en createOne: No se completo todos los campos
 2024-08-10T16:08:41.249Z error: Error en createOne: products validation failed: id: Path `id` is required.
+2024-08-14T02:32:25.989Z warn: ID de producto inválido recibido DELETEBYID: 20
+2024-08-14T02:36:56.196Z warn: ID de producto inválido recibido DELETEBYID: 20
+2024-08-14T02:49:59.169Z warn: ID de producto inválido recibido DELETEBYID: 20
+2024-08-14T02:50:20.273Z warn: ID de producto inválido recibido DELETEBYID: 20
+2024-08-14T02:50:58.440Z warn: ID de producto inválido recibido DELETEBYID: 20
+2024-08-14T02:51:18.729Z warn: ID de producto inválido recibido DELETEBYID: 20
+2024-08-14T02:53:11.886Z error: Error en deleteById: Cast to ObjectId failed for value "20" (type string) at path "_id" for model "products"
