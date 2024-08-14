@@ -19,3 +19,5 @@ const initilizeStrategy = () => {
         }
     }))
 }
+
+module.exports = initilizeStrategy

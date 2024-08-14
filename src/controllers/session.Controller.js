@@ -114,7 +114,6 @@ class SessionController {
 
     async register(req, res, next) {
         const { email, firstName, lastName, _id, role } = req.user;
-        req.session.user = { email, firstName, lastName, _id: _id.toString(), role };
     
         try {
             const newCart = new Cart({ userId: _id, items: [] });
@@ -122,7 +121,7 @@ class SessionController {
 
             await User.findByIdAndUpdate(_id, { cartId: savedCart._id });
             
-            req.session.user = { cartId: newCart._id.toString() } 
+            req.session.user = {  email, firstName, lastName, _id: _id.toString(), role, cartId: newCart._id.toString() } 
 
             res.redirect('/products');
         } catch (error) {
